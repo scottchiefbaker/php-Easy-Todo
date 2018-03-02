@@ -5,7 +5,7 @@ function set_person_focus() {
 function toggle_note(id) {
 	var eid = document.getElementById('toggle_' + id);
 
-	eid.innerHTML = "<br /> <form method=\"get\" action=\"index.php\"> <textarea id=\"ta_" + id + "\" style=\"width: 98%;\" name=\"note\"></textarea> <input type=\"hidden\" name=\"note_id\" value=\"" + id + "\"> <input type=\"hidden\" name=\"action\" value=\"add_note\"> <br /> <input type=\"submit\" value=\"Add Note\" /></form>";
+	eid.innerHTML = "<br /> <form method=\"get\" action=\"index.php\"> <input type=\"text\" id=\"ta_" + id + "\" style=\"width: 98%;\" name=\"note\" /> <input type=\"hidden\" name=\"note_id\" value=\"" + id + "\"> <input type=\"hidden\" name=\"action\" value=\"add_note\"></form>";
 
 	document.getElementById('ta_' + id).focus();
 
