@@ -131,7 +131,9 @@ class todo {
 			}
 		}
 
-		$uniq_id || $uniq_id = rand(0,99999999);
+		if (empty($uniq_id)) {
+			$uniq_id = rand(0,99999999);
+		}
 		$expire = date("U") + (86400 * 120);
 		setcookie("todo_unique_id",$uniq_id,$expire);
 
