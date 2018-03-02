@@ -721,7 +721,7 @@ class todo {
 
 	function search_highlight($text,$search) {
 		if (!$search) { return $text; }
-		$text = preg_replace("/$search/i","<span class=\"search_highlight\">$search</span>",$text);
+		$text = preg_replace("/($search)/i","<span class=\"search_highlight\">$1</span>",$text);
 
 		return $text;
 	}
