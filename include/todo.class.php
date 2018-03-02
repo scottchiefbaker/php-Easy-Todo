@@ -343,7 +343,7 @@ class todo {
 
 		foreach ($note_info as $info) {
 			$text = $info['NoteText'];
-			$text = nl2br($text);
+			$text = htmlentities(nl2br($text));
 
 			if ($search) {
 				$text = $this->search_highlight($text,$search);
