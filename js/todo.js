@@ -1,15 +1,28 @@
+$(document).ready(function() {
+	init_add_note();
+});
+
 function set_person_focus() {
 	document.getElementById('person_name').focus();
 }
 
-function toggle_note(id) {
-	var eid = document.getElementById('toggle_' + id);
+function add_note(selector) {
+	var elem = $(selector);
+	var id   = elem.data("todo_id");
 
-	eid.innerHTML = "<br /> <form method=\"get\" action=\"index.php\"> <input type=\"text\" id=\"ta_" + id + "\" style=\"width: 98%;\" name=\"note\" /> <input type=\"hidden\" name=\"note_id\" value=\"" + id + "\"> <input type=\"hidden\" name=\"action\" value=\"add_note\"></form>";
+	// If this item already has a note box open don't add a second
+	var has_note = $(".adding_note", elem).length > 0;
+	if (has_note || !id) { return false; }
 
-	document.getElementById('ta_' + id).focus();
+	// Only one note box open at at time, remove all the other ones
+	$(".add_note_wrapper").remove();
 
-	return false;
+	var note = $("<div class=\"add_note_wrapper\"><form class=\"adding_note\" method=\"get\" action=\"index.php\"> <input class=\"add_note\" placeholder=\"Add notes...\" type=\"text\" id=\"ta_" + id + "\" name=\"note\" /> <input type=\"hidden\" name=\"note_id\" value=\"" + id + "\"> <input type=\"hidden\" name=\"action\" value=\"add_note\"></form></div>");
+
+	note.appendTo(elem);
+	$(".add_note",elem).focus();
+
+	return true;
 }
 
 function check_login_form() {
@@ -60,7 +73,7 @@ function search_name(name) {
 
 			if (id > 0) {
 				var conf = confirm("Are you: \nName: " + name + "\nEmail: " + email);
-			
+
 				if (conf) {
 					get_eid('person_name').value = name;
 					get_eid('person_email').value = email;
@@ -68,7 +81,7 @@ function search_name(name) {
 				}
 				// alert(name + " " + email);
 			}
-			
+
 		}
 	}
 
@@ -79,4 +92,13 @@ function get_eid(name) {
 	var eid = document.getElementById(name);
 
 	return eid;
+}
+
+function init_add_note() {
+	var target = $(".todo_desc, .todo_notes");
+	target.css("cursor","pointer").attr("title","Click to add notes to this item");
+
+	$(".todo_normal").on("click", target, function() {
+		add_note($(this));
+	});
 }
