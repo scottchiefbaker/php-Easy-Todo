@@ -16,7 +16,7 @@ $out         .= "<div class=\"footer\"><a href=\"javascript: $bookmarklet\">Book
 
 // Add the sql output if it's requested
 if (!empty($_GET['debug'])) {
-	$out .= "<br />" . $todo->dbq->summary();
+	$out .= "<br />" . $todo->dbq->query_summary();
 }
 
 print $xhtml->output($out);
