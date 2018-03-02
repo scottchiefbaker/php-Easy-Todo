@@ -8,6 +8,7 @@ $todo  = new todo;
 
 $xhtml->css_file = "css/todo.css";
 $xhtml->script   = "js/todo.js";
+$xhtml->script   = "js/jquery.js";
 $xhtml->title    = "TODO List";
 
 $out          = $todo->show_todo_list();
