@@ -193,8 +193,8 @@ class todo {
 	function show_todo_list() {
 		$person = $this->person;
 		$person_id = $this->person_id;
-		$ret = "<h2 class=\"large_header\">Hello there $person (#$person_id)</h2>\n";
-		$ret .= "<h3 class=\"medium_header\">Showing TODO list</h3>\n\n";
+		$ret = "<h2 class=\"large_header\">Logged in as $person (#$person_id)</h2>\n";
+		//$ret .= "<h3 class=\"medium_header\">Showing TODO list</h3>\n\n";
 
 		$ret .= $this->todo_html_output();
 
