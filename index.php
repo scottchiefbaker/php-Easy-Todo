@@ -6,10 +6,10 @@ require('include/xhtml.class.php');
 $xhtml = new html;
 $todo  = new todo;
 
-$xhtml->css_file = "css/todo.css";
-$xhtml->script   = "js/todo.js";
-$xhtml->script   = "js/jquery.js";
-$xhtml->title    = "TODO List";
+$xhtml->css[] = "css/todo.css";
+$xhtml->js[]  = "js/jquery.js";
+$xhtml->js[]  = "js/todo.js";
+$xhtml->title = "TODO List";
 
 $out          = $todo->show_todo_list();
 $bookmarklet  = $todo->get_bookmarklet();

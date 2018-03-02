@@ -14,15 +14,26 @@ class html {
 			$body = "<div class=\"warning\"><b>Warning:</b> $this->warning</div>\n\n" . $body;
 		}
 
-		$script = $this->script ?? "";
-		if ($script) {
-			$script = "<script type=\"text/javascript\" src=\"$script\"></script>\n";
-			$content = preg_replace("/{script}/",$script,$content);
-		} else {
-			$content = preg_replace("/{script}/","",$content);
-		}
+		/////////////////////////////////////////////////////////////////////////
 
-		$content = preg_replace("/{style}/"      ,$style,$content);
+		$script     = $this->js ?? [];
+		$script_str = "";
+		foreach ($script as $s) {
+			$script_str .= "<script type=\"text/javascript\" src=\"$s\"></script>\n";
+		}
+		$content = preg_replace("/{js}/",$script_str,$content);
+
+		/////////////////////////////////////////////////////////////////////////
+
+		$css = $this->css ?? [];
+		$css_str = "";
+		foreach ($css as $s) {
+			$css_str .= "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"$s\" />\n";
+		}
+		$content = preg_replace("/{css}/",$css_str,$content);
+
+		/////////////////////////////////////////////////////////////////////////
+
 		$content = preg_replace("/{body}/"       ,$body,$content);
 		$content = preg_replace("/{body_props}/" ,$this->body_props ?? "",$content);
 		$content = preg_replace("/{title}/"      ,$this->title      ?? "",$content);
