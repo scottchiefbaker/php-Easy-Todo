@@ -4,12 +4,12 @@ require('include/todo.class.php');
 require('include/xhtml.class.php');
 
 $xhtml = new html;
-$todo  = new todo;
-
 $xhtml->css[] = "css/todo.css";
 $xhtml->js[]  = "js/jquery.js";
 $xhtml->js[]  = "js/todo.js";
 $xhtml->title = "TODO List";
+
+$todo  = new todo;
 
 $out          = $todo->show_todo_list();
 $bookmarklet  = $todo->get_bookmarklet();
