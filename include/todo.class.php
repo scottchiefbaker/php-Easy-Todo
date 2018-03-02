@@ -72,7 +72,7 @@ class todo {
 
 		///////////////////////////////////////////////////
 
-		if (!$this->person && !$_GET['user_search']) {
+		if (!$this->person && empty($_GET['user_search'])) {
 			$ret = $this->show_set_person();
 			$this->xhtml->body_props = ("onload='set_person_focus();'");
 			print $this->xhtml->output($ret);
@@ -160,7 +160,7 @@ class todo {
 	}
 
 	function get_person() {
-		$uniq_id = $_COOKIE['todo_unique_id'];
+		$uniq_id = $_COOKIE['todo_unique_id'] ?? "";
 		if (!$uniq_id) { return 0; }
 
 		$sql = "SELECT PersonName, PersonID FROM Person WHERE PersonUniqID = $uniq_id LIMIT 1;";
@@ -172,7 +172,7 @@ class todo {
 
 	function show_set_person() {
 		$PHP_SELF = $_SERVER['PHP_SELF'];
-		$ret .= "<h2>I don't know who you are!</h2>\n";
+		$ret  = "<h2>I don't know who you are!</h2>\n";
 		$ret .= "<div>Before you can access this site please provide your full name (and email address if you want to receive updates)</div>\n";
 
 		$ret .= "<br />\n";
