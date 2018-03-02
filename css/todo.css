@@ -1,4 +1,25 @@
-body { font-family: sans; border: 0px solid red; } 
+@font-face {
+	font-family : 'Open Sans';
+	font-style  : normal;
+	font-weight : 400;
+	src         :
+		local('Open Sans'),
+		url('css/fonts/open_sans/OpenSans-Regular-webfont.woff') format('woff');
+}
+
+@font-face {
+	font-family : 'Open Sans';
+	font-style  : bold;
+	font-weight : 700;
+	src         :
+		local('Open Sans Bold'),
+		url('css/fonts/open_sans/OpenSans-Bold-webfont.woff') format('woff');
+}
+
+body {
+	font-family: "Open Sans", Helvetica, Verdana, sans;
+	border: 0px solid red;
+}
 
 .small_text { font-size: 0.65em; margin: 0px; font-weight: normal; }
 
@@ -6,15 +27,15 @@ body { font-family: sans; border: 0px solid red; }
 .medium_header { font-size: 1.2em; margin: 0px ; font-weight: bold; margin: 0.5em 0 0.5em 0; }
 .large_header { font-size: 1.5em; margin: 0px ; margin: 0.5em 0 0.5em 0; }
 
-.bold { font-weight: bold; } 
-.italic { font-style: italic; } 
+.bold { font-weight: bold; }
+.italic { font-style: italic; }
 
 .todo_list { border-collapse: collapse; width: 100%; }
 .todo_list th { border: 1px solid black; padding: 2px; background-color: #faffdb; }
 .todo_list td { border: 1px solid black; padding: 2px; }
 
-.enter_todo { margin-top: 15px; border: 0px solid green; width: 49%; float: left; } 
-.search_todo { margin-top: 15px; border: 0px solid green; width: 49%; float: right; text-align: right; } 
+.enter_todo { margin-top: 15px; border: 0px solid green; width: 49%; float: left; }
+.search_todo { margin-top: 15px; border: 0px solid green; width: 49%; float: right; text-align: right; }
 
 label { display: block; width: 150px; float: left; }
 
@@ -23,20 +44,20 @@ ul { border: 0px solid; margin: 0px; }
 .detail_view .note_text { font-size: 0.8em; }
 
 .detail_view_task { font-size: 2.0em; font-weight: bold; text-align: center; border: 1px solid black; background-color: #ffeed3; }
-.detail_view_assigned { 
-	font-size: 1.0em; 
-	font-weight: bold; 
-	text-align: center; 
-	border-left: 1px solid black; 
-	border-right: 1px solid black; 
-	border-bottom: 1px solid black; 
+.detail_view_assigned {
+	font-size: 1.0em;
+	font-weight: bold;
+	text-align: center;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
 	background-color: #f8ffd3;
-	width: 95%; 
-	margin: auto; 
+	width: 95%;
+	margin: auto;
 }
 
-.detail_view_complete { margin-top: 15px; } 
-.detail_view_last_update { margin-top: 0px; } 
+.detail_view_complete { margin-top: 15px; }
+.detail_view_last_update { margin-top: 0px; }
 
 .footer { font-size: 0.7em; margin-top: 10px; clear: both; }
 
@@ -46,7 +67,7 @@ ul { border: 0px solid; margin: 0px; }
 
 .todo_normal { }
 
-.search_highlight { 
+.search_highlight {
 	color: red;
 	font-weight: bold;
 	background-color: yellow;
