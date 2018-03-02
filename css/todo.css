@@ -32,7 +32,10 @@ body {
 
 .todo_list { border-collapse: collapse; width: 100%; }
 .todo_list th { border: 1px solid black; padding: 2px; background-color: #faffdb; }
-.todo_list td { border: 1px solid black; padding: 2px; }
+.todo_list td {
+	border  : 1px solid black;
+	padding : 5px 8px;
+}
 
 .enter_todo { margin-top: 15px; border: 0px solid green; width: 49%; float: left; }
 .search_todo { margin-top: 15px; border: 0px solid green; width: 49%; float: right; text-align: right; }
