@@ -110,30 +110,21 @@ class todo {
 	}
 
 	function set_person($name,$email) {
-		#$addr = $_SERVER['REMOTE_ADDR'];
-		#$addr_long = ip2long($addr);
-
+		$uniq_id = null;
 		if ($_REQUEST['person_id']) {
 			$uniq_id = $_REQUEST['person_id'];
 		} else {
-			$person_info = $this->person_search($name,NULL);
+			$person_info = $this->person_search(NULL,$email);
 			if ($person_info) {
 				$uniq_id = $person_info['PersonUniqID'];
-				// print "Found uniq_id after a name search: $uniq_id<br />\n";
-			}
-
-			if (!$uniq_id) {
-				$person_info = $this->person_search(NULL,$email);
-				if ($person_info) {
-					$uniq_id = $person_info['PersonUniqID'];
-					// print "Found uniq_id after an email search: $uniq_id<br />\n";
-				}
+				print "Found uniq_id after an email search: $uniq_id<br />\n";
 			}
 		}
 
-		if (empty($uniq_id)) {
+		if (!$uniq_id) {
 			$uniq_id = rand(0,99999999);
 		}
+
 		$expire = date("U") + (86400 * 120);
 		setcookie("todo_unique_id",$uniq_id,$expire);
 
@@ -142,8 +133,6 @@ class todo {
 		}
 
 		$sql = "INSERT INTO Person (PersonUniqID, PersonName, PersonEmailAddress) VALUES ($uniq_id,'$name','$email');";
-
-		// print $sql;
 
 		$ret = $this->dbq->query($sql);
 
@@ -181,8 +170,8 @@ class todo {
 		$ret .= "<input type=\"text\" name=\"person_name\" value=\"\" size=\"50\" id=\"person_name\" onkeyup=\"javascript: search_name(this.value)\" /><br />\n";
 		$ret .= "<label>Email address:</label>\n";
 		$ret .= "<input type=\"text\" name=\"person_email\" id=\"person_email\" value=\"\" size=\"50\" onkeyup=\"javascript: search_name(this.value)\" /><br />\n";
-		$ret .= "<label>Existing User:</label>\n";
-		$ret .= "<input type=\"checkbox\" name=\"existing_user\" id=\"existing\" value=\"\" /><br />\n";
+		//$ret .= "<label>Existing User:</label>\n";
+		//$ret .= "<input type=\"checkbox\" name=\"existing_user\" id=\"existing\" value=\"\" /><br />\n";
 		$ret .= "<input type=\"hidden\" name=\"action\" value=\"add_person\" />\n";
 		$ret .= "<input type=\"hidden\" name=\"person_id\" id=\"person_id\" value=\"\" />\n";
 		$ret .= "<br />\n";
