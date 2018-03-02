@@ -313,7 +313,7 @@ class todo {
 				$row .= "\t<td class=\"$html_class\">$added</td>\n";
 				$row .= "\t<td class=\"$html_class\">$created_by</td>\n";
 				#$ret .= "\t<td><a href=\"index.php?action=detail_view&todo_id=$id\">$id</a> $desc $notes_html $note_toggle</td>\n";
-				$row .= "\t<td class=\"$html_class\">$desc $notes_html $note_toggle</td>\n";
+				$row .= "\t<td class=\"$html_class\"><div>$desc</div><div>$notes_html</div><div>$note_toggle</div></td>\n";
 				$row .= "\t<td class=\"$html_class\"><div class=\"center\">$comp_percent</div><div class=\"center\">$comp_admin</div></td>\n";
 				$row .= "</tr>\n";
 
