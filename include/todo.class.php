@@ -272,6 +272,8 @@ class todo {
 		$ret .= "	<th width=\"10%\">Complete</th>\n";
 		$ret .= "</tr>\n";
 
+		$completed_tasks = "";
+
 		if ($todo_info) {
 			foreach ($todo_info as $info) {
 				$id = $info['TodoID'];
@@ -321,7 +323,6 @@ class todo {
 					$completed_tasks .= $row;
 				} else {
 					$ret .= $row;
-					$completed_tasks = "";
 				}
 			}
 		}
