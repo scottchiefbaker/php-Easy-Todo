@@ -379,7 +379,7 @@ class todo {
 		$old_cutoff = date("U") - (86400 * 5);
 
 		$start = $filter['start'] ?? "";
-		$end   = $filter['end'] ?? "";
+		$end   = $filter['end']   ?? "";
 
 		// Date filtered
 		if ($start && $end) {
@@ -387,15 +387,17 @@ class todo {
 				FROM Todo t, Person p
 				WHERE p.PersonID = t.PersonID AND ((TodoDateTimeAdded BETWEEN $start AND $end) OR (TodoLastUpdate BETWEEN $start AND $end))
 				ORDER BY $order_field DESC;";
-			// Search through old past entries
+		// Search through old past entries
 		} elseif ($search_term = $filter['search']) {
 			$sql = "SELECT t.TodoID AS TodoID, TodoDateTimeAdded, TodoPriority, TodoDesc, p.PersonID AS PersonID, PersonName, TodoCompletePercent
-				FROM Todo t, Person p, Notes n
-				WHERE t.TodoID = n.TodoID AND p.PersonID = t.PersonID AND (TodoDesc LIKE '%$search_term%' OR PersonName LIKE '%$search_term%' OR NoteText LIKE '%$search_term%')
+				FROM Todo t
+				INNER JOIN Person p USING (PersonID)
+				LEFT  JOIN Notes n USING (TodoID)
+				WHERE (TodoDesc LIKE '%$search_term%' OR PersonName LIKE '%$search_term%' OR NoteText LIKE '%$search_term%')
 				GROUP BY t.TodoID
 				ORDER BY $order_field DESC
 				LIMIT 20";
-			// Normal
+		// Normal
 		} else {
 			// Get all non-completed items, OR get the completed items that were completed in the last X days (uses last update not start date)
 			$sql = "SELECT TodoID, TodoDateTimeAdded, TodoPriority, TodoDesc, p.PersonID AS PersonID, PersonName, TodoCompletePercent
@@ -404,15 +406,13 @@ class todo {
 				ORDER BY $order_field DESC;";
 		}
 
-		// print "$sql<br />\n";
+		//print "<pre>$sql</pre><br />\n";
 
 		$rs = $this->dbq->query($sql);
 
-		#print $sql;
-
 		$non_complete = array();
-		$back_burner = array();
-		$complete = array();
+		$back_burner  = array();
+		$complete     = array();
 
 		foreach ($rs as $data) {
 			if ($data['TodoCompletePercent'] == $this->back_burner_id) {
