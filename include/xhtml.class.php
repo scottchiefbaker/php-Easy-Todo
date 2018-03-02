@@ -14,7 +14,7 @@ class html {
 			$body = "<div class=\"warning\"><b>Warning:</b> $this->warning</div>\n\n" . $body;
 		}
 
-		$script = $this->script;
+		$script = $this->script ?? "";
 		if ($script) {
 			$script = "<script type=\"text/javascript\" src=\"$script\"></script>\n";
 			$content = preg_replace("/{script}/",$script,$content);
@@ -28,7 +28,7 @@ class html {
 		$content = preg_replace("/{title}/"      ,$this->title      ?? "",$content);
 		$content = preg_replace("/{link}/"       ,$this->link       ?? "",$content);
 
-		if ($this->css_file) {
+		if (!empty($this->css_file)) {
 			$css_file = $this->css_file;
 			$css      = "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"$css_file\" title=\"Default\" />";
 			$content  = preg_replace("/{css}/",$css,$content);

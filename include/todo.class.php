@@ -62,7 +62,9 @@ class todo {
 			$html = $this->show_detail_view($todo_id);
 
 			// Add the sql output if it's requested
-			if ($_GET['debug']) { $html .= "<br />" . $this->dbq->summary(); }
+			if (!empty($_GET['debug'])) {
+				$html .= "<br />" . $this->dbq->summary();
+			}
 
 			print $this->xhtml->output($html);
 			exit;
@@ -514,7 +516,7 @@ class todo {
 		$percent = $todo_info['TodoCompletePercent'] . "%";
 		$last_update = date("Y-m-d",$todo_info['TodoLastUpdate']);
 
-		$ret .= "<div class=\"detail_view_task\">Task #$todo_id: $todo_desc</div>\n";
+		$ret  = "<div class=\"detail_view_task\">Task #$todo_id: $todo_desc</div>\n";
 		$ret .= "<div class=\"detail_view_assigned\">Assigned by: $person on $todo_date</div>\n";
 		$ret .= "<div class=\"detail_view_complete\"><b>Status:</b> $percent complete</div>\n";
 		$ret .= "<div class=\"detail_view_last_update\"><b>Last Updated:</b> $last_update</div>\n";
