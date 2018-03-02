@@ -1,14 +1,16 @@
-<?PHP
+<?php
 
 class html {
 	function output($html) {
-		$this->template || $this->template = "tpls/xhtml-template.html";
+		if (empty($this->template)) {
+			$this->template = "tpls/xhtml-template.html";
+		}
+
 		$content = join("",file($this->template));
+		$style   = $this->style ?? "";
+		$body    = $html        ?? "";
 
-		$style = $this->style;
-		$body = $html;
-
-		if ($this->warning) {
+		if (!empty($this->warning)) {
 			$body = "<div class=\"warning\"><b>Warning:</b> $this->warning</div>\n\n" . $body;
 		}
 
@@ -20,17 +22,16 @@ class html {
 			$content = preg_replace("/{script}/","",$content);
 		}
 
-		$content = preg_replace("/{style}/",$style,$content);
-		$content = preg_replace("/{body}/",$body,$content);
-		$content = preg_replace("/{body_props}/",$this->body_props,$content);
-		$content = preg_replace("/{title}/",$this->title,$content);
-		$content = preg_replace("/{link}/",$this->link,$content);
+		$content = preg_replace("/{style}/"      ,$style,$content);
+		$content = preg_replace("/{body}/"       ,$body,$content);
+		$content = preg_replace("/{body_props}/" ,$this->body_props ?? "",$content);
+		$content = preg_replace("/{title}/"      ,$this->title      ?? "",$content);
+		$content = preg_replace("/{link}/"       ,$this->link       ?? "",$content);
 
 		if ($this->css_file) {
 			$css_file = $this->css_file;
-			$css = "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"$css_file\" title=\"Default\" />";
-
-			$content = preg_replace("/{css}/",$css,$content);
+			$css      = "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"$css_file\" title=\"Default\" />";
+			$content  = preg_replace("/{css}/",$css,$content);
 		}
 
 		$content = preg_replace("/{\w+}/","",$content);

@@ -191,14 +191,14 @@ class todo {
 	function show_todo_list() {
 		$person = $this->person;
 		$person_id = $this->person_id;
-		$ret .= "<h2 class=\"large_header\">Hello there $person (#$person_id)</h2>\n";
+		$ret = "<h2 class=\"large_header\">Hello there $person (#$person_id)</h2>\n";
 		$ret .= "<h3 class=\"medium_header\">Showing TODO list</h3>\n\n";
 
 		$ret .= $this->todo_html_output();
 
 		$PHP_SELF = $_SERVER['PHP_SELF'];
 
-		$todo_desc || $todo_desc = "Add a task";
+		$todo_desc = "Add a task";
 
 		$ret .= "<div class=\"enter_todo\">\n";
 		//$ret .= "<h5 class=\"small_text bold italic\">Add a TODO item:</h5>\n";
@@ -207,7 +207,7 @@ class todo {
 		#$ret .= "<input type=\"text\" name=\"todo_due\" value=\"$todo_due\" size=\"10\" />\n";
 		#$ret .= "<input type=\"text\" name=\"todo_priority\" value=\"$todo_prio\" size=\"10\" />\n";
 		$ret .= "	<input type=\"submit\" value=\"Submit\" />\n";
-		$ret .= "	<input type=\"hidden\" name=\"todo_id\" value=\"$todo_id\" size=\"50\" />\n";
+		$ret .= "	<input type=\"hidden\" name=\"todo_id\" value=\"\" size=\"50\" />\n";
 		$ret .= "	<input type=\"hidden\" name=\"action\" value=\"add_todo\" />\n";
 		$ret .= "</form>\n";
 		$ret .= "</div>";
@@ -257,13 +257,12 @@ class todo {
 	}
 
 	function todo_html_output() {
-		$filter = $this->parse_search();
-		$search = $_GET['search'];
-
+		$filter    = $this->parse_search();
+		$search    = $_GET['search'] ?? "";
 		$todo_info = $this->get_active_todo($filter);
-		$PHP_SELF = $_SERVER['PHP_SELF'];
+		$PHP_SELF  = $_SERVER['PHP_SELF'];
 
-		$ret .= "<table class=\"todo_list\">\n";
+		$ret  = "<table class=\"todo_list\">\n";
 		$ret .= "<tr>\n";
 		$ret .= "	<th width=\"23%\">Date Added</th>\n";
 		$ret .= "	<th width=\"15%\">Added By</th>\n";
@@ -320,6 +319,7 @@ class todo {
 					$completed_tasks .= $row;
 				} else {
 					$ret .= $row;
+					$completed_tasks = "";
 				}
 			}
 		}
@@ -332,11 +332,11 @@ class todo {
 
 	function note_html($id) {
 		$note_info = $this->get_note_info($id);
-		$search = $_GET['search'];
+		$search    = $_GET['search'] ?? "";
 
 		if (!$note_info) { return ""; }
 
-		$ret .= "<ul>\n";
+		$ret = "<ul>\n";
 
 		foreach ($note_info as $info) {
 			$text = $info['NoteText'];
@@ -375,11 +375,11 @@ class todo {
 
 		$old_cutoff = date("U") - (86400 * 5);
 
-		// Date filtered
-		if ($filter['start'] && $filter['end']) {
-			$start = $filter['start'];
-			$end = $filter['end'];
+		$start = $filter['start'] ?? "";
+		$end   = $filter['end'] ?? "";
 
+		// Date filtered
+		if ($start && $end) {
 			$sql = "SELECT TodoID, TodoDateTimeAdded, TodoPriority, TodoDesc, p.PersonID AS PersonID, PersonName, TodoCompletePercent
 				FROM Todo t, Person p
 				WHERE p.PersonID = t.PersonID AND ((TodoDateTimeAdded BETWEEN $start AND $end) OR (TodoLastUpdate BETWEEN $start AND $end))
@@ -467,14 +467,7 @@ class todo {
 		else { $http = "http://"; }
 
 		$real_url = $http . $_SERVER['SERVER_NAME'] . dirname($_SERVER['SCRIPT_NAME']) . "/";
-		$real_url .= "js/bookmarklet.js";
-
-		$html .= "
-var foo=prompt('What do you need to do?');
-if (foo) {
-	url='$real_url?action=add_todo&todo_desc=' + escape(foo);
-	location.href = url;
-}";
+		$real_url .= "js/bookmarklet.js.php";
 
 		$html = "void(z=document.body.appendChild(document.createElement('script'))); void(z.language='javascript');void(z.type='text/javascript');void(z.src='$real_url');void(z.id='todo_bmlet');";
 
@@ -706,7 +699,7 @@ if (foo) {
 	}
 
 	function parse_search() {
-		$search = $_GET['search'];
+		$search = $_GET['search'] ?? "";
 
 		if (preg_match("/(.+?) to (.+?)$/",$search,$match)) {
 			$start = strtotime($match[1]);
