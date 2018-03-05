@@ -3,6 +3,9 @@
 class todo {
 	public $back_burner_id = -1;
 
+	public $date_format = "F jS Y";
+	public $time_format = "F jS Y @ g:iA";
+
 	function __construct() {
 		$dsn = "sqlite:/home/bakers/database/todo.sqlite";
 
@@ -257,8 +260,7 @@ class todo {
 
 		$ret  = "<table class=\"todo_list\">\n";
 		$ret .= "<tr>\n";
-		$ret .= "	<th width=\"23%\">Date Added</th>\n";
-		$ret .= "	<th width=\"15%\">Added By</th>\n";
+		$ret .= "	<th width=\"23%\">Creation</th>\n";
 		$ret .= "	<th width=\"52%\">Description of task</th>\n";
 		$ret .= "	<th width=\"10%\">Complete</th>\n";
 		$ret .= "</tr>\n";
@@ -267,9 +269,10 @@ class todo {
 
 		if ($todo_info) {
 			foreach ($todo_info as $info) {
-				$id = $info['TodoID'];
-				$added = date("Y-m-d",$info['TodoDateTimeAdded']);
-				$prio = $info['TodoPriority'];
+				$id     = $info['TodoID'];
+				$added  = date($this->date_format,$info['TodoDateTimeAdded']);
+				$addedt = date($this->time_format,$info['TodoDateTimeAdded']);
+				$prio   = $info['TodoPriority'];
 
 				$desc = $this->search_highlight($info['TodoDesc'],$search);
 				$desc = utf8_encode($desc);
@@ -303,8 +306,7 @@ class todo {
 				}
 
 				$row = "<tr>\n";
-				$row .= "\t<td class=\"$html_class\">$added</td>\n";
-				$row .= "\t<td class=\"$html_class\">$created_by</td>\n";
+				$row .= "\t<td class=\"$html_class\"><b title=\"$addedt\">$added</b> by $created_by</td>\n";
 				#$ret .= "\t<td><a href=\"index.php?action=detail_view&todo_id=$id\">$id</a> $desc $notes_html $note_toggle</td>\n";
 				$row .= "\t<td data-todo_id=\"$id\" class=\"$html_class\"><div class=\"todo_desc\">$desc</div><div class=\"todo_notes\">$notes_html</div></td>\n";
 				$row .= "\t<td class=\"$html_class\"><div class=\"center\">$comp_percent</div><div class=\"center\">$comp_admin</div></td>\n";
@@ -340,11 +342,12 @@ class todo {
 				$text = $this->search_highlight($text,$search);
 			}
 
-			$id = $info['NoteID'];
+			$id     = $info['NoteID'];
 			$person = $info['PersonName'];
-			$date = date("Y-m-d",$info['NoteDateTime']);
+			$date   = date($this->date_format,$info['NoteDateTime']);
+			$datet  = date($this->time_format,$info['NoteDateTime']);
 
-			$ret .= "<li class=\"note_text\">$date - $person: $text</li>";
+			$ret .= "<li class=\"note_text\"><span title=\"$datet\">$date</span> - $person: $text</li>";
 		}
 		$ret .= "</ul>\n";
 
@@ -499,13 +502,12 @@ class todo {
 	function show_detail_view($todo_id) {
 		$note_html = $this->note_html($todo_id);
 		$todo_info = $this->get_todo_info($todo_id);
-		$PHP_SELF = $_SERVER['PHP_SELF'];
-
+		$PHP_SELF  = $_SERVER['PHP_SELF'];
 		$todo_desc = $todo_info['TodoDesc'];
 
-		$todo_date = date("Y-m-d",$todo_info['TodoDateTimeAdded']);
-		$person = $todo_info['PersonName'];
-		$percent = $todo_info['TodoCompletePercent'] . "%";
+		$todo_date   = date("Y-m-d",$todo_info['TodoDateTimeAdded']);
+		$person      = $todo_info['PersonName'];
+		$percent     = $todo_info['TodoCompletePercent'] . "%";
 		$last_update = date("Y-m-d",$todo_info['TodoLastUpdate']);
 
 		$ret  = "<div class=\"detail_view_task\">Task #$todo_id: $todo_desc</div>\n";
