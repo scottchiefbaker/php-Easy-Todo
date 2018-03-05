@@ -1,5 +1,7 @@
 <?php
 
+require_once("include/Parsedown.php");
+
 class todo {
 	public $back_burner_id = -1;
 
@@ -338,6 +340,9 @@ class todo {
 			if ($search) {
 				$text = $this->search_highlight($text,$search);
 			}
+
+			// Do inline Parsedown parsing (not a <p>)
+			$text = Parsedown::instance()->line($text);
 
 			$id     = $info['NoteID'];
 			$person = $info['PersonName'];
