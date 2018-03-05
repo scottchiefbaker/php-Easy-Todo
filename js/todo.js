@@ -99,7 +99,7 @@ function init_add_note() {
 	var target = $(".todo_desc, .todo_notes");
 	target.css("cursor","pointer").attr("title","Click to add notes to this item");
 
-	$(".todo_normal, .todo_complete").on("click", target, function() {
+	$(".todo_normal, .todo_complete, .back_burner").on("click", target, function() {
 		add_note($(this));
 	});
 }
