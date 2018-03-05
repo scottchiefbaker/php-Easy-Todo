@@ -277,15 +277,12 @@ class todo {
 				$desc = $this->search_highlight($info['TodoDesc'],$search);
 				$desc = utf8_encode($desc);
 
-				$created_by = $info['PersonName'];
+				$created_by       = $info['PersonName'];
 				$comp_percent_raw = $info['TodoCompletePercent'];
-				$comp_percent = $comp_percent_raw . "%";
+				$comp_percent     = $comp_percent_raw . "%";
 
-				$url = "$PHP_SELF?todo_id=$id&amp;action=complete_todo&amp;percent=100";
-
-				$comp_admin = "&nbsp;&nbsp;<form style=\"display: inline;\" method=\"get\" action=\"$PHP_SELF\">";
-				$comp_admin .= "	<input type=\"text\" maxlength=\"2\" name=\"percent\" size=\"2\" />";
-				$comp_admin .= "	<input type=\"button\" name=\"complete_item\" value=\"!!!\" size=\"2\" onclick=\"if(confirm('Complete Task?')) { location.href = '$url'; }\" />";
+				$comp_admin = "<form style=\"display: inline;\" method=\"get\" action=\"$PHP_SELF\">";
+				$comp_admin .= "	<input class=\"hidden percent\" type=\"text\" maxlength=\"3\" name=\"percent\" size=\"2\" />";
 				$comp_admin .= "	<input type=\"hidden\" name=\"todo_id\" value=\"$id\" />";
 				$comp_admin .= "	<input type=\"hidden\" name=\"action\" value=\"complete_todo\" />";
 				$comp_admin .= "</form>";
@@ -309,7 +306,7 @@ class todo {
 				$row .= "\t<td class=\"$html_class\"><b title=\"$addedt\">$added</b> by $created_by</td>\n";
 				#$ret .= "\t<td><a href=\"index.php?action=detail_view&todo_id=$id\">$id</a> $desc $notes_html $note_toggle</td>\n";
 				$row .= "\t<td data-todo_id=\"$id\" class=\"$html_class\"><div class=\"todo_desc\">$desc</div><div class=\"todo_notes\">$notes_html</div></td>\n";
-				$row .= "\t<td class=\"$html_class\"><div class=\"center\">$comp_percent</div><div class=\"center\">$comp_admin</div></td>\n";
+				$row .= "\t<td class=\"$html_class edit_percent\"><div class=\"center\">$comp_percent</div><div class=\"center\">$comp_admin</div></td>\n";
 				$row .= "</tr>\n";
 
 				if ($comp_percent_raw == 100) {

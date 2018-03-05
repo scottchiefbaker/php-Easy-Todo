@@ -83,3 +83,7 @@ ul { border: 0px solid; margin: 0px; }
 .add_note {
 	width: 98%;
 }
+
+.hidden {
+	display: none;
+}

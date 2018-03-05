@@ -1,5 +1,6 @@
 $(document).ready(function() {
 	init_add_note();
+	init_change_percent();
 });
 
 function set_person_focus() {
@@ -100,5 +101,12 @@ function init_add_note() {
 
 	$(".todo_normal, .todo_complete").on("click", target, function() {
 		add_note($(this));
+	});
+}
+
+function init_change_percent() {
+	$(".edit_percent").css("cursor","pointer").on("click",function() {
+		$(".percent").hide(); // Hide any other ones we have open
+		$(".percent",this).show().focus();
 	});
 }
