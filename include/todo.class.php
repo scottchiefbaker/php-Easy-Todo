@@ -341,15 +341,22 @@ class todo {
 				$text = $this->search_highlight($text,$search);
 			}
 
+			$login_id = intval($this->person_id);
+
 			// Do inline Parsedown parsing (not a <p>)
 			$text = Parsedown::instance()->line($text);
 
-			$id     = $info['NoteID'];
-			$person = $info['PersonName'];
-			$date   = date($this->date_format,$info['NoteDateTime']);
-			$datet  = date($this->time_format,$info['NoteDateTime']);
+			$id        = $info['NoteID'];
+			$person    = $info['PersonName'];
+			$person_id = intval($info['PersonID']);
+			$date      = date($this->date_format,$info['NoteDateTime']);
+			$datet     = date($this->time_format,$info['NoteDateTime']);
 
-			$ret .= "<li class=\"note_text\"><span title=\"$datet\">$date</span> - $person: $text</li>";
+			if ($login_id === $person_id) {
+				$ret .= "<li class=\"note_text\"><span title=\"$datet\">$date</span>: $text</li>";
+			} else {
+				$ret .= "<li class=\"note_text\"><span title=\"$datet\">$date</span> - $person: $text</li>";
+			}
 		}
 		$ret .= "</ul>\n";
 
