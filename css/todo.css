@@ -87,3 +87,12 @@ ul { border: 0px solid; margin: 0px; }
 .hidden {
 	display: none;
 }
+
+/* Inline `code` tags from Markdown */
+li code {
+	border           : 1px solid #ccc;
+	padding          : 2px;
+	font-size        : 95%;
+	font-family      : "Source Code Pro", "Consolas", monospace;
+	background-color : rgba(27,31,35,0.05);
+}
