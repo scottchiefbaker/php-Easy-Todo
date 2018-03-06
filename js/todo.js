@@ -13,10 +13,11 @@ function add_note(selector) {
 
 	// If this item already has a note box open don't add a second
 	var has_note = $(".adding_note", elem).length > 0;
-	if (has_note || !id) { return false; }
 
 	// Only one note box open at at time, remove all the other ones
 	$(".add_note_wrapper").remove();
+
+	if (has_note || !id) { return false; }
 
 	var note = $("<div class=\"add_note_wrapper\"><form class=\"adding_note\" method=\"get\" action=\"index.php\"> <input class=\"add_note\" placeholder=\"Add notes...\" type=\"text\" id=\"ta_" + id + "\" name=\"note\" /> <input type=\"hidden\" name=\"note_id\" value=\"" + id + "\"> <input type=\"hidden\" name=\"action\" value=\"add_note\"></form></div>");
 
@@ -96,11 +97,13 @@ function get_eid(name) {
 }
 
 function init_add_note() {
-	var target = $(".todo_desc, .todo_notes");
+	var selector = ".todo_desc, .todo_notes";
+	var target   = $(selector);
 	target.css("cursor","pointer").attr("title","Click to add notes to this item");
 
-	$(".todo_normal, .todo_complete, .back_burner").on("click", target, function() {
-		add_note($(this));
+	$(".todo_normal, .todo_complete, .back_burner").on("click", selector, function() {
+		var box = $(this).closest("td");
+		add_note(box);
 	});
 }
 
