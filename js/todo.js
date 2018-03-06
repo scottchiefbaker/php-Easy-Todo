@@ -106,7 +106,9 @@ function init_add_note() {
 
 function init_change_percent() {
 	$(".edit_percent").css("cursor","pointer").on("click",function() {
-		$(".percent").hide(); // Hide any other ones we have open
-		$(".percent",this).show().focus();
+		$(".hide_percent").show();          // Show all the hide percents
+		$(".percent").hide();               // Hide any other input boxes we have open
+		$(".percent",this).show().select(); // Show the input box
+		$(".hide_percent",this).hide();     // Hide the HTML display percent
 	});
 }
