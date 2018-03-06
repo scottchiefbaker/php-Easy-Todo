@@ -89,7 +89,7 @@ ul { border: 0px solid; margin: 0px; }
 }
 
 /* Inline `code` tags from Markdown */
-li code {
+.todo_list code {
 	border           : 1px solid #ccc;
 	padding          : 2px;
 	font-size        : 95%;
