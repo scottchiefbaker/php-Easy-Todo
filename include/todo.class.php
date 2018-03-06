@@ -130,7 +130,7 @@ class todo {
 			$uniq_id = rand(0,99999999);
 		}
 
-		$expire = date("U") + (86400 * 120);
+		$expire = time() + (86400 * 120);
 		setcookie("todo_unique_id",$uniq_id,$expire);
 
 		if ($_REQUEST['person_id']) {
@@ -239,7 +239,7 @@ class todo {
 		$desc = $this->dbq->quote($desc);
 		$person_id = $this->person_id;
 
-		$now = date("U");
+		$now = time();
 
 		$sql = "INSERT INTO Todo (TodoDateTimeAdded,TodoDesc,TodoPriority,PersonID, TodoLastUpdate) VALUES ($now,$desc,$prio,$person_id,$now);";
 
@@ -379,7 +379,7 @@ class todo {
 	function get_active_todo($filter) {
 		$order_field = "TodoDateTimeAdded";
 
-		$old_cutoff = date("U") - (86400 * 5);
+		$old_cutoff = time() - (86400 * 5);
 
 		$start = $filter['start'] ?? "";
 		$end   = $filter['end']   ?? "";
@@ -439,7 +439,7 @@ class todo {
 
 		if ((!$percent == $this->back_burner_id) && ($percent > 100 || $percent < 0)) { return 0; }
 
-		$now = date("U");
+		$now = time();
 
 		$sql = "UPDATE Todo SET TodoCompletePercent = $percent, TodoLastUpdate = $now WHERE TodoID = $id;";
 
@@ -486,7 +486,7 @@ class todo {
 	function add_todo_note($id,$note,$notify_users) {
 		if (!$id || !$note) { return 0; }
 
-		$now = date("U");
+		$now = time();
 		$person_id = $this->person_id;
 		$note_text = trim($note);
 		$note_text = $this->dbq->quote($note_text);
