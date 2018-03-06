@@ -62,18 +62,6 @@ class todo {
 
 			$PHP_SELF = $_SERVER['PHP_SELF'];
 			header("Location: $PHP_SELF");
-		} elseif($action == "detail_view") {
-			$todo_id = $_GET['todo_id'];
-
-			$html = $this->show_detail_view($todo_id);
-
-			// Add the sql output if it's requested
-			if (!empty($_GET['debug'])) {
-				$html .= "<br />" . $this->dbq->summary();
-			}
-
-			print $this->xhtml->output($html);
-			exit;
 		}
 
 		///////////////////////////////////////////////////
@@ -505,35 +493,6 @@ class todo {
 		}
 
 		return 1;
-	}
-
-	function show_detail_view($todo_id) {
-		$note_html = $this->note_html($todo_id);
-		$todo_info = $this->get_todo_info($todo_id);
-		$PHP_SELF  = $_SERVER['PHP_SELF'];
-		$todo_desc = $todo_info['TodoDesc'];
-
-		$todo_date   = date("Y-m-d",$todo_info['TodoDateTimeAdded']);
-		$person      = $todo_info['PersonName'];
-		$percent     = $todo_info['TodoCompletePercent'] . "%";
-		$last_update = date("Y-m-d",$todo_info['TodoLastUpdate']);
-
-		$ret  = "<div class=\"detail_view_task\">Task #$todo_id: $todo_desc</div>\n";
-		$ret .= "<div class=\"detail_view_assigned\">Assigned by: $person on $todo_date</div>\n";
-		$ret .= "<div class=\"detail_view_complete\"><b>Status:</b> $percent complete</div>\n";
-		$ret .= "<div class=\"detail_view_last_update\"><b>Last Updated:</b> $last_update</div>\n";
-
-		if ($note_html) {
-			$ret .= "<div class=\"detail_view\">\n";
-			$ret .= "<h3 class=\"medium_header\">Notes:</h3>\n";
-			$ret .= $note_html;
-			$ret .= "</div>\n";
-		}
-
-		$PHP_SELF = $_SERVER['PHP_SELF'];
-		$ret .= "<div class=\"footer\"><span id=\"toggle_$todo_id\"><a onclick=\"javascript: return toggle_note($todo_id);\" href=\"$PHP_SELF\">Add Note</a> | </span><a href=\"$PHP_SELF\">Return to list</a></div>";
-
-		return $ret;
 	}
 
 	function get_email_headers ($subject) {
