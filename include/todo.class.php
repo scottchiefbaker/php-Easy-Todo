@@ -1,6 +1,7 @@
 <?php
 
 require_once("include/Parsedown.php");
+require_once("include/krumo/class.krumo.php");
 
 class todo {
 	public $back_burner_id = -1;
