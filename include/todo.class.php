@@ -282,7 +282,7 @@ class todo {
 
 				$note_toggle = " <span id=\"toggle_$id\" class=\"small_text\"><a onclick=\"javascript: return toggle_note($id);\" href=\"$PHP_SELF\">[Add Note]</a> <a href=\"$PHP_SELF?action=detail_view&amp;todo_id=$id\">[Detail View]</a></span>";
 
-				$notes_html = $this->note_html($id);
+				$notes_html = $this->note_html(null,$info['notes']);
 
 				if ($comp_percent_raw == 100) {
 					$html_class = "todo_complete";
@@ -314,14 +314,17 @@ class todo {
 		return $ret;
 	}
 
-	function note_html($id) {
-		$note_info = $this->get_note_info($id);
-		$search    = $_GET['search'] ?? "";
+	function note_html($id,$note_info = null) {
+		if (!$note_info) {
+			$note_info = $this->get_note_info($id);
+			if (!$note_info) {
+				return "";
+			}
+		}
 
-		if (!$note_info) { return ""; }
+		$search = $_GET['search'] ?? "";
 
 		$ret = "<ul>\n";
-
 		foreach ($note_info as $info) {
 			$text = $info['NoteText'];
 			$text = htmlentities(nl2br($text));
@@ -356,9 +359,9 @@ class todo {
 		if (!$id) { return 0; }
 
 		$sql = "SELECT NoteID, NoteDateTime, NoteText, PersonName, p.PersonID AS PersonID, PersonEmailAddress
-			FROM Notes n, Person p
-			WHERE p.PersonID = n.PersonID AND TodoID = $id;";
-		//print "$sql<br />\n";
+			FROM Notes n
+			INNER JOIN Person p USING (PersonID)
+			WHERE TodoID = $id;";
 
 		$ret = $this->dbq->query($sql);
 
@@ -398,9 +401,28 @@ class todo {
 				ORDER BY $order_field DESC;";
 		}
 
-		//print "<pre>$sql</pre><br />\n";
+		$rs = $this->dbq->query($sql,"info_hash:TodoID");
 
-		$rs = $this->dbq->query($sql);
+		$ids = [];
+		foreach ($rs as $data) {
+			$todo_id = $data['TodoID'];
+			$ids[]   = $todo_id;
+		}
+
+		// Get the notes for these items
+		$id_str = join(",",$ids);
+		$sql = "SELECT NoteID, NoteDateTime, NoteText, PersonID, PersonName, PersonEmailAddress, TodoID
+			FROM Notes n
+			INNER JOIN Person p USING (PersonID)
+			WHERE TodoID IN ($id_str)
+			ORDER BY NoteDateTime;";
+		$notes  = $this->dbq->query($sql);
+
+		// Put the notes back in the original array
+		foreach ($notes as $x) {
+			$id = $x['TodoID'];
+			$rs[$id]['notes'][] = $x;
+		}
 
 		$non_complete = array();
 		$back_burner  = array();
