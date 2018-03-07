@@ -282,7 +282,8 @@ class todo {
 
 				$note_toggle = " <span id=\"toggle_$id\" class=\"small_text\"><a onclick=\"javascript: return toggle_note($id);\" href=\"$PHP_SELF\">[Add Note]</a> <a href=\"$PHP_SELF?action=detail_view&amp;todo_id=$id\">[Detail View]</a></span>";
 
-				$notes_html = $this->note_html(null,$info['notes']);
+				$notes = $info['notes'] ?? [];
+				$notes_html = $this->note_html(null,$notes);
 
 				if ($comp_percent_raw == 100) {
 					$html_class = "todo_complete";
