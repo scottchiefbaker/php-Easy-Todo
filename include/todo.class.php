@@ -294,10 +294,12 @@ class todo {
 					$html_class = "todo_normal";
 				}
 
+				$show_icon = "<a href=\"?details=$id\"><span class=\"show_detail\">&#x1F4CB</span></a>";
+
 				$row = "<tr>\n";
 				$row .= "\t<td class=\"$html_class\"><b title=\"$addedt\">$added</b> by $created_by</td>\n";
 				#$ret .= "\t<td><a href=\"index.php?action=detail_view&todo_id=$id\">$id</a> $desc $notes_html $note_toggle</td>\n";
-				$row .= "\t<td data-todo_id=\"$id\" class=\"$html_class\"><div class=\"todo_desc\">$desc</div><div class=\"todo_notes\">$notes_html</div></td>\n";
+				$row .= "\t<td data-todo_id=\"$id\" class=\"$html_class\"><div>$show_icon<span class=\"todo_desc\">$desc</span></div><div class=\"todo_notes\">$notes_html</div></td>\n";
 				$row .= "\t<td class=\"$html_class edit_percent\"><div class=\"center hide_percent\">$comp_percent</div><div class=\"center\">$comp_admin</div></td>\n";
 				$row .= "</tr>\n";
 
@@ -374,8 +376,10 @@ class todo {
 
 		$old_cutoff = time() - (86400 * 5);
 
-		$start = $filter['start'] ?? "";
-		$end   = $filter['end']   ?? "";
+		$start  = $filter['start']  ?? "";
+		$end    = $filter['end']    ?? "";
+		$search = $filter['search'] ?? "";
+		$id     = $filter['id']     ?? 0;
 
 		// Date filtered
 		if ($start && $end) {
@@ -384,7 +388,7 @@ class todo {
 				WHERE p.PersonID = t.PersonID AND ((TodoDateTimeAdded BETWEEN $start AND $end) OR (TodoLastUpdate BETWEEN $start AND $end))
 				ORDER BY $order_field DESC;";
 		// Search through old past entries
-		} elseif ($search_term = $filter['search']) {
+		} elseif ($search) {
 			$sql = "SELECT t.TodoID AS TodoID, TodoDateTimeAdded, TodoPriority, TodoDesc, p.PersonID AS PersonID, PersonName, TodoCompletePercent
 				FROM Todo t
 				INNER JOIN Person p USING (PersonID)
@@ -393,6 +397,13 @@ class todo {
 				GROUP BY t.TodoID
 				ORDER BY $order_field DESC
 				LIMIT 20";
+		// Search by ID
+		} elseif ($id) {
+			$sql = "SELECT t.TodoID AS TodoID, TodoDateTimeAdded, TodoPriority, TodoDesc, p.PersonID AS PersonID, PersonName, TodoCompletePercent
+				FROM Todo t
+				INNER JOIN Person p USING (PersonID)
+				LEFT  JOIN Notes n USING (TodoID)
+				WHERE TodoID = $id";
 		// Normal
 		} else {
 			// Get all non-completed items, OR get the completed items that were completed in the last X days (uses last update not start date)
@@ -707,5 +718,35 @@ class todo {
 		$text = preg_replace("/($search)/i","<span class=\"search_highlight\">$1</span>",$text);
 
 		return $text;
+	}
+
+	function show_detail(int $id) {
+		$x = $this->get_active_todo(['id' => $id]);
+		$x = array_shift($x);
+
+		$desc     = $x['TodoDesc'];
+		$date_str = date($this->date_format,$x['TodoDateTimeAdded']);
+		$notes    = $x['notes'];
+		$per      = intval($x['TodoCompletePercent']);
+
+		//k($x);
+
+		$ret = "<div><b>Date Added:</b> $date_str</div>\n";
+		$ret .= "<div><b>Description:</b> $desc</div>\n";
+		$ret .= "<div><b>Complete:</b> $per%</div>\n";
+		$ret .= "<div class=\"detail_notes\"><b>Notes:</b></div>\n";
+
+		$ret .= "<ul>\n";
+		foreach ($notes as $n) {
+			$date_str = date($this->date_format,$n['NoteDateTime']);
+			$note_txt = $n['NoteText'];
+
+			$ret .= "<li>$date_str - $note_txt</li>";
+		}
+		$ret .= "</ul>\n";
+
+		$ret .= "<div class=\"detail_menu\"><a href=\".\">Menu</a></div>";
+
+		return $ret;
 	}
 }
