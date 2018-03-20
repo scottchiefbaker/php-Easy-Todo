@@ -726,7 +726,7 @@ class todo {
 
 		$desc     = $x['TodoDesc'];
 		$date_str = date($this->date_format,$x['TodoDateTimeAdded']);
-		$notes    = $x['notes'];
+		$notes    = $x['notes'] ?? [];
 		$per      = intval($x['TodoCompletePercent']);
 
 		//k($x);
@@ -734,7 +734,9 @@ class todo {
 		$ret = "<div><b>Date Added:</b> $date_str</div>\n";
 		$ret .= "<div><b>Description:</b> $desc</div>\n";
 		$ret .= "<div><b>Complete:</b> $per%</div>\n";
-		$ret .= "<div class=\"detail_notes\"><b>Notes:</b></div>\n";
+		if ($notes) {
+			$ret .= "<div class=\"detail_notes\"><b>Notes:</b></div>\n";
+		}
 
 		$ret .= "<ul>\n";
 		foreach ($notes as $n) {
