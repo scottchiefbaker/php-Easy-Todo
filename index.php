@@ -18,9 +18,7 @@ $detail_id = $_GET['details'] ?? null;
 if ($detail_id) {
 	$out = $todo->show_detail($detail_id);
 } else {
-	$out          = $todo->show_todo_list();
-	$bookmarklet  = $todo->get_bookmarklet();
-	$out         .= "<div class=\"footer\"><a href=\"javascript: $bookmarklet\">Bookmarklet</a></div>";
+	$out = $todo->show_todo_list();
 }
 
 // Output some debug info if requested

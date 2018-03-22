@@ -46,8 +46,8 @@ a {
 	padding : 5px 8px;
 }
 
-.enter_todo { margin-top: 15px; border: 0px solid green; width: 49%; float: left; }
-.search_todo { margin-top: 15px; border: 0px solid green; width: 49%; float: right; text-align: right; }
+.enter_todo {}
+.search_todo { text-align: right; }
 
 label { display: block; width: 150px; float: left; }
 
@@ -71,7 +71,16 @@ ul { border: 0px solid; margin: 0px; }
 .detail_view_complete { margin-top: 15px; }
 .detail_view_last_update { margin-top: 0px; }
 
-.footer { font-size: 0.7em; margin-top: 10px; clear: both; }
+.footer {
+	font-size             : 0.7em;
+	margin-top            : 10px;
+	display               : grid;
+	grid-template-columns : 1fr 1fr;
+}
+
+.footer input {
+	height: 32px;
+}
 
 .todo_complete { background-color: #a1ff9c; }
 .back_burner { background-color: #aee7ff; }

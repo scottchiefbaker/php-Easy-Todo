@@ -186,33 +186,34 @@ class todo {
 		$PHP_SELF = $_SERVER['PHP_SELF'];
 
 		$todo_desc = "Add a task";
+		$bookmarklet  = $this->get_bookmarklet();
 
-		$ret .= "<div class=\"enter_todo\">\n";
+		$ret .= "<div class=\"footer\">\n";
+		$ret .= "\t<div class=\"enter_todo\">\n";
 		//$ret .= "<h5 class=\"small_text bold italic\">Add a TODO item:</h5>\n";
-		$ret .= "<form action=\"$PHP_SELF\" method=\"post\">\n";
-		$ret .= "	<input type=\"text\" name=\"todo_desc\" placeholder=\"$todo_desc\" value=\"\" size=\"50\" onclick=\"javascript: this.value='';\" maxlength=\"100\" />\n";
+		$ret .= "\t\t<form action=\"$PHP_SELF\" method=\"post\">\n";
+		$ret .= "\t\t\t<input type=\"text\" name=\"todo_desc\" placeholder=\"$todo_desc\" value=\"\" size=\"50\" onclick=\"javascript: this.value='';\" maxlength=\"100\" />\n";
 		#$ret .= "<input type=\"text\" name=\"todo_due\" value=\"$todo_due\" size=\"10\" />\n";
 		#$ret .= "<input type=\"text\" name=\"todo_priority\" value=\"$todo_prio\" size=\"10\" />\n";
-		$ret .= "	<input type=\"submit\" value=\"Submit\" />\n";
-		$ret .= "	<input type=\"hidden\" name=\"todo_id\" value=\"\" size=\"50\" />\n";
-		$ret .= "	<input type=\"hidden\" name=\"action\" value=\"add_todo\" />\n";
-		$ret .= "</form>\n";
-		$ret .= "</div>";
+		$ret .= "\t\t\t<input class=\"button\" type=\"submit\" value=\"Submit\" />\n";
+		$ret .= "\t\t\t<input type=\"hidden\" name=\"todo_id\" value=\"\" size=\"50\" />\n";
+		$ret .= "\t\t\t<input type=\"hidden\" name=\"action\" value=\"add_todo\" />\n";
+		$ret .= "\t\t</form>\n";
+		$ret .= "\t<a href=\"javascript: $bookmarklet\">Bookmarklet</a>\n";
+		$ret .= "\t</div>\n\n";
 
 		$end = time();
 		$start = $end - (86400 * 30);
 
 		$search_text = date("Y-m-d",$start) . " to " . date("Y-m-d",$end);
 
-		$ret .= "<div class=\"search_todo\">\n";
-		//$ret .= "<h5 class=\"small_text bold italic\">Search TODO List:</h5>\n";
-		$ret .= "<form action=\"$PHP_SELF\" method=\"get\">\n";
-		$ret .= "	<input type=\"text\" name=\"search\" value=\"$search_text\" size=\"50\" maxlength=\"100\" />\n";
-		#$ret .= "<input type=\"text\" name=\"todo_due\" value=\"$todo_due\" size=\"10\" />\n";
-		#$ret .= "<input type=\"text\" name=\"todo_priority\" value=\"$todo_prio\" size=\"10\" />\n";
-		$ret .= "	<input type=\"submit\" value=\"Search\" />\n";
-		$ret .= "</form>\n";
-		$ret .= "</div>";
+		$ret .= "\t<div class=\"search_todo\">\n";
+		$ret .= "\t\t<form action=\"$PHP_SELF\" method=\"get\">\n";
+		$ret .= "\t\t\t<input type=\"text\" name=\"search\" value=\"$search_text\" size=\"50\" maxlength=\"100\" />\n";
+		$ret .= "\t\t\t<input class=\"button\" type=\"submit\" value=\"Search\" />\n";
+		$ret .= "\t\t</form>\n";
+		$ret .= "\t</div>\n";
+		$ret .= "</div>\n";
 
 		return $ret;
 	}
