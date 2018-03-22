@@ -294,7 +294,7 @@ class todo {
 					$html_class = "todo_normal";
 				}
 
-				$show_icon = "<a href=\"?details=$id\"><span class=\"show_detail\">&#x1F4CB</span></a>";
+				$show_icon = "<a href=\"?details=$id\"><span class=\"show_detail\">&#x1F4CB;</span></a>";
 
 				$row = "<tr>\n";
 				$row .= "\t<td class=\"$html_class\"><b title=\"$addedt\">$added</b> by $created_by</td>\n";
