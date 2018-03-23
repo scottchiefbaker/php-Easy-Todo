@@ -1,33 +1,31 @@
-<?PHP
+<?php
+
+define("DB_QUERY_VERSION","1.0.0");
 
 //////////////////////////////////////////////////////////////////////////////
 
-// If you would like to log queries, define a writable log path here
-if (!defined('DB_QUERY_LOG')) {
-	define('DB_QUERY_LOG',"");
-}
-
-//////////////////////////////////////////////////////////////////////////////
-
-// This is extended and called 'db_query' in the config class
-class db_core {
+class DBQuery {
 	var $debug                   = 0;
 	var $show_errors             = 1;   // If this is set to zero be silent about all errors
 	var $slow_query_time         = 0.1; // Highlight queries that takes longer than this
 	var $external_error_function = "";  // Override the built in error function
 	var $db_name                 = "";  // Placeholder
 	var $dbh_cache               = [];
+	var $dbh                     = null;
+	var $query_log               = "";
 
-	public function init_db_core($db = "") {
-		if ($db) { $this->db($db); }
+	public function __construct($dsn,$user = "",$pass = "") {
+		$ret = new PDO($dsn,$user,$pass);
+
+		if ($ret) {
+			$this->dbh = $ret;
+		}
 	}
 
 	public function query($sql = "",$return_type = "",$third = '') {
 		$start = microtime(1);
 		$sql   = trim($sql);
 
-		// If we're not connected to a DB connect to the default one
-		if (!$this->dbh) { $this->db('default'); } // Connect to the default DB
 		$dbh = $this->dbh;
 
 		// Test if the DB connection is there
@@ -177,6 +175,7 @@ class db_core {
 
 			// If nothing is in the record set, return an empty string
 			if (!isset($ret)) { $ret = ''; }
+			$return_recs = 1;
 		} elseif ($return_type == 'info_list') {
 			while ($data = $sth->fetch(PDO::FETCH_NUM)) {
 				$ret[] = $data;
@@ -264,15 +263,19 @@ class db_core {
 			if (!$ret) { $ret = true; }
 
 			$return_type = 'insert_id';
+			$return_recs = 1;
 		} elseif ($return_type == 'affected_rows' || preg_match("/^(DELETE|UPDATE|REPLACE|TRUNCATE)/i",$sql)) {
-			$ret = $affected_rows;
+			$ret         = $affected_rows;
 			$return_type = 'affected_rows';
+			$return_recs = 1;
 		} elseif (preg_match("/^(LOCK|UNLOCK)/i",$sql)) {
 			$return_type = 'lock/unlock';
-			$ret = 1;
+			$ret         = 1;
+			$return_recs = 1;
 		} elseif (preg_match("/^(CREATE|DROP)/i",$sql)) {
 			$return_type = 'create/drop';
-			$ret = 1;
+			$ret         = 1;
+			$return_recs = 1;
 		} else {
 			// If we're not showing errors, just return false
 			if (!$show_errors) { return false; }
@@ -292,6 +295,11 @@ class db_core {
 			if (!isset($ret)) {
 				$return_recs = 0;
 			} else {
+				if (!is_array($ret)) {
+					print "$sql\n";
+					print_r($ret);
+					print "\n";
+				}
 				$return_recs = sizeof($ret);
 			}
 			if (isset($insert_id)) { $return_recs .= " (#$insert_id)"; }
@@ -322,15 +330,15 @@ class db_core {
 		$this->db_query_info[] = $info;
 
 		// Log to a file if need be
-		if (defined('DB_QUERY_LOG') && is_writable(DB_QUERY_LOG)) {
-			$sql_log = DB_QUERY_LOG;
-			$fp = @fopen($sql_log,"a");
+		if (!empty($this->query_log) && is_writable($this->query_log)) {
+			$sql_log = $this->query_log;
+			$fp      = @fopen($sql_log,"a");
 
 			$sql = preg_replace("/\n|\r/","",$sql); // Make it all one line
 			$sql = preg_replace("/\s+/"," ",$sql); // Remove double spaces
 
 			$date = date("Y-m-d H:i:s");
-			$str = "\"$date\",\"$sql\",\"$total\",\"$return_recs\"\n";
+			$str  = "\"$date\",\"$sql\",\"$total\",\"$return_recs\"\n";
 
 			if ($fp) {
 				fwrite($fp,$str);
@@ -498,65 +506,12 @@ class db_core {
 		return $ret;
 	}
 
-	public function db($name = "",$u = "",$p = "",$cache_only = false) {
-		// With no params we just return the currently connected DB
-		if (!$name) {
-			if (isset($this->db_name)) {
-				return $this->db_name;
-			} else {
-				return false;
-			}
-		}
-
-		// We just check the FIRST name
-		if (is_array($name)) {
-			$name = array_shift($name);
-		}
-
-		$this->debug_log("DB lookup for '$name'");
-
-		// If $name is already cached use that
-		if (isset($this->dbh_cache[$name])) {
-			$dbh = $this->dbh_cache[$name];
-
-			$this->debug_log("Cache hit on '$name'");
-		} else {
-			$this->debug_log("Cache miss on '$name'");
-
-			if (!$cache_only) {
-				list($dbh,$names) = $this->db_connect($name,$u,$p);
-			} else {
-				$names = [$name];
-				$dbh   = $cache_only;
-			}
-
-			// If the DBH isn't already cache add it to the cache
-			foreach ($names as $name) {
-				if (!isset($this->dbh_cache[$name])) {
-					$this->dbh_cache[$name] = $dbh;
-					$this->debug_log("Storing DB cache for '$name'");
-				}
-
-			}
-		}
-
-		$this->dbh = $dbh;
-
-		if (preg_match("/\w+:/",$name)) { $name = "DSN"; }
-		$this->db_name = $name;
-
-		return $dbh;
-	}
-
 	public function debug_log($str) {
 		if ($this->debug) { print "<div>$str</div>\n"; }
 	}
 
 	public function quote($str) {
 		return $this->dbh->quote($str);
-	}
-
-	function __destruct() {
 	}
 
 	public function begin() {
@@ -589,20 +544,4 @@ class db_core {
 
 		return false;
 	}
-
 }
-
-$dbq_config = __DIR__ . '/db_query.config.php';
-
-if (is_readable($dbq_config)) {
-	// Extend the class by adding all the config options
-	require('db_query.config.php');
-} elseif (is_readable(__DIR__ . "/db_query.config.php.sample")) {
-	$dbq = new db_core;
-	$dbq->error_out("Missing config. Please rename db_query.config.php.sample to db_query.config.php after you make appropriate changes");
-} else {
-	$dbq = new db_core;
-	$dbq->error_out("Missing config.");
-}
-
-?>

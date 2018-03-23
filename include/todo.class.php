@@ -12,8 +12,8 @@ class todo {
 	function __construct() {
 		$dsn = "sqlite:/home/bakers/database/todo.sqlite";
 
-		require('include/db_query.inc.php');
-		$this->dbq = new db_query($dsn);
+		require('include/db_query.class.php');
+		$this->dbq = new DBQuery($dsn);
 
 		$action = $_REQUEST['action'] ?? "";
 
