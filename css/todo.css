@@ -72,10 +72,14 @@ ul { border: 0px solid; margin: 0px; }
 .detail_view_last_update { margin-top: 0px; }
 
 .footer {
-	font-size             : 0.7em;
-	margin-top            : 10px;
-	display               : grid;
-	grid-template-columns : 1fr 1fr;
+	font-size  : 0.7em;
+	margin-top : 10px;
+	display    : flex;
+}
+
+.footer > div {
+	flex    : 1;
+	outline : 0px solid black;
 }
 
 .footer input {
