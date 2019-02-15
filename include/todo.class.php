@@ -34,15 +34,13 @@ class todo {
 			$this->person    = $person_info['PersonName'];
 			$this->person_id = $person_info['PersonID'];
 
-			$PHP_SELF = $_SERVER['PHP_SELF'];
-			header("Location: $PHP_SELF");
+			header("Location: .");
 		} elseif($action == "add_todo") {
 			$desc = $_REQUEST['todo_desc'];
 
 			$this->add_todo_item($desc);
 
-			$PHP_SELF = $_SERVER['PHP_SELF'];
-			header("Location: $PHP_SELF");
+			header("Location: .");
 		} elseif($action == "complete_todo") {
 			$percent = $_GET['percent'];
 			$tid = $_GET['todo_id'];
@@ -51,8 +49,7 @@ class todo {
 
 			if (!$ret) { $this->error_out("Couldn't update the percentage!?!"); }
 
-			$PHP_SELF = $_SERVER['PHP_SELF'];
-			header("Location: $PHP_SELF");
+			header("Location: .");
 		} elseif($action == "add_note") {
 			$id = $_GET['note_id'];
 			$note = $_GET['note'];
@@ -60,8 +57,7 @@ class todo {
 				$this->error_out("Error adding note");
 			}
 
-			$PHP_SELF = $_SERVER['PHP_SELF'];
-			header("Location: $PHP_SELF");
+			header("Location: .");
 		}
 
 		///////////////////////////////////////////////////
@@ -154,12 +150,11 @@ class todo {
 	}
 
 	function show_set_person() {
-		$PHP_SELF = $_SERVER['PHP_SELF'];
 		$ret  = "<h2>I don't know who you are!</h2>\n";
 		$ret .= "<div>Before you can access this site please provide your full name (and email address if you want to receive updates)</div>\n";
 
 		$ret .= "<br />\n";
-		$ret .= "<form action=\"$PHP_SELF\" method=\"post\" onsubmit=\"javascript: return check_login_form();\">\n";
+		$ret .= "<form action=\".\" method=\"post\" onsubmit=\"javascript: return check_login_form();\">\n";
 		$ret .= "<label>Your Name:</label>\n";
 		$ret .= "<input type=\"text\" name=\"person_name\" value=\"\" size=\"50\" id=\"person_name\" onkeyup=\"javascript: search_name(this.value)\" /><br />\n";
 		$ret .= "<label>Email address:</label>\n";
@@ -183,15 +178,13 @@ class todo {
 
 		$ret .= $this->todo_html_output();
 
-		$PHP_SELF = $_SERVER['PHP_SELF'];
-
 		$todo_desc = "Add a task";
 		$bookmarklet  = $this->get_bookmarklet();
 
 		$ret .= "<div class=\"footer\">\n";
 		$ret .= "\t<div class=\"enter_todo\">\n";
 		//$ret .= "<h5 class=\"small_text bold italic\">Add a TODO item:</h5>\n";
-		$ret .= "\t\t<form action=\"$PHP_SELF\" method=\"post\">\n";
+		$ret .= "\t\t<form action=\".\" method=\"post\">\n";
 		$ret .= "\t\t\t<input type=\"text\" name=\"todo_desc\" placeholder=\"$todo_desc\" value=\"\" size=\"50\" onclick=\"javascript: this.value='';\" maxlength=\"100\" />\n";
 		#$ret .= "<input type=\"text\" name=\"todo_due\" value=\"$todo_due\" size=\"10\" />\n";
 		#$ret .= "<input type=\"text\" name=\"todo_priority\" value=\"$todo_prio\" size=\"10\" />\n";
@@ -208,7 +201,7 @@ class todo {
 		$search_text = date("Y-m-d",$start) . " to " . date("Y-m-d",$end);
 
 		$ret .= "\t<div class=\"search_todo\">\n";
-		$ret .= "\t\t<form action=\"$PHP_SELF\" method=\"get\">\n";
+		$ret .= "\t\t<form action=\".\" method=\"get\">\n";
 		$ret .= "\t\t\t<input type=\"text\" name=\"search\" value=\"$search_text\" size=\"50\" maxlength=\"100\" />\n";
 		$ret .= "\t\t\t<input class=\"button\" type=\"submit\" value=\"Search\" />\n";
 		$ret .= "\t\t</form>\n";
@@ -248,7 +241,6 @@ class todo {
 		$filter    = $this->parse_search();
 		$search    = $_GET['search'] ?? "";
 		$todo_info = $this->get_active_todo($filter);
-		$PHP_SELF  = $_SERVER['PHP_SELF'];
 
 		$ret  = "<table class=\"todo_list\">\n";
 		$ret .= "<tr>\n";
@@ -273,7 +265,7 @@ class todo {
 				$comp_percent_raw = $info['TodoCompletePercent'];
 				$comp_percent     = $comp_percent_raw . "%";
 
-				$comp_admin = "<form style=\"display: inline;\" method=\"get\" action=\"$PHP_SELF\">";
+				$comp_admin = "<form style=\"display: inline;\" method=\"get\" action=\".\">";
 				$comp_admin .= "	<input class=\"hidden percent\" type=\"text\" maxlength=\"3\" value=\"$comp_percent_raw\" name=\"percent\" size=\"2\" />";
 				$comp_admin .= "	<input type=\"hidden\" name=\"todo_id\" value=\"$id\" />";
 				$comp_admin .= "	<input type=\"hidden\" name=\"action\" value=\"complete_todo\" />";
@@ -281,7 +273,7 @@ class todo {
 
 				if ($this->person_id != 1) { $comp_admin = ""; }
 
-				$note_toggle = " <span id=\"toggle_$id\" class=\"small_text\"><a onclick=\"javascript: return toggle_note($id);\" href=\"$PHP_SELF\">[Add Note]</a> <a href=\"$PHP_SELF?action=detail_view&amp;todo_id=$id\">[Detail View]</a></span>";
+				$note_toggle = " <span id=\"toggle_$id\" class=\"small_text\"><a onclick=\"javascript: return toggle_note($id);\" href=\".\">[Add Note]</a> <a href=\"?action=detail_view&amp;todo_id=$id\">[Detail View]</a></span>";
 
 				$notes = $info['notes'] ?? [];
 				$notes_html = $this->note_html(null,$notes);
