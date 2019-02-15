@@ -62,7 +62,9 @@ class todo {
 
 		///////////////////////////////////////////////////
 
-		if (!$this->person && empty($_GET['user_search'])) {
+		$is_cli = $this->is_cli();
+
+		if (!$this->person && empty($_GET['user_search']) && !$is_cli) {
 			$ret = $this->show_set_person();
 			$this->xhtml->body_props = ("onload='set_person_focus();'");
 			print $this->xhtml->output($ret);
@@ -743,5 +745,13 @@ class todo {
 		$ret .= "<div class=\"detail_menu\"><a href=\".\">Menu</a></div>";
 
 		return $ret;
+	}
+
+	function is_cli() {
+		if (php_sapi_name() == 'cli') {
+			return true;
+		}
+
+		return false;
 	}
 }
