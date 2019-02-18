@@ -3,8 +3,10 @@
 $debug = $_GET['debug'] ?? "";
 $start = microtime(1);
 
-require('include/todo.class.php');
-require('include/xhtml.class.php');
+$base_dir = dirname(__FILE__);
+
+require("$base_dir/include/todo.class.php");
+require("$base_dir/include/xhtml.class.php");
 
 $xhtml = new html;
 $xhtml->css[] = "css/todo.css";
@@ -58,12 +60,13 @@ function handle_cli_commands($argv) {
 
 function send_reminder_email($to) {
 	global $todo;
+	global $base_dir;
 
 	$headers  = "From: no-reply@perturb.org\r\n";
 	$headers .= "MIME-Version: 1.0\r\n";
 	$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-	$css  = "<style>" . file_get_contents("css/todo.css") . "</style>";
+	$css  = "<style>" . file_get_contents("$base_dir/css/todo.css") . "</style>";
 	$html = $todo->todo_html_output();
 	$subj = "TODO reminder list";
 	$body = $css . $html;

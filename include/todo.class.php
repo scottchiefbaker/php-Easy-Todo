@@ -1,7 +1,7 @@
 <?php
 
-require_once("include/Parsedown.php");
-require_once("include/krumo/class.krumo.php");
+require_once("$base_dir/include/Parsedown.php");
+require_once("$base_dir/include/krumo/class.krumo.php");
 
 class todo {
 	public $back_burner_id = -1;
@@ -12,7 +12,8 @@ class todo {
 	function __construct() {
 		$dsn = "sqlite:/home/bakers/database/todo.sqlite";
 
-		require('include/db_query.class.php');
+		global $base_dir;
+		require("$base_dir/include/db_query.class.php");
 		$this->dbq = new DBQuery($dsn);
 
 		$action = $_REQUEST['action'] ?? "";
