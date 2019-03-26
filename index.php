@@ -16,7 +16,7 @@ $xhtml->title = "TODO List";
 
 $todo  = new todo;
 
-handle_cli_commands($argv);
+handle_cli_commands();
 
 $detail_id = $_GET['details'] ?? null;
 if ($detail_id) {
@@ -37,7 +37,7 @@ print $xhtml->output($out);
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-function handle_cli_commands($argv) {
+function handle_cli_commands() {
 	global $todo;
 
 	if (!$todo->is_cli()) {
