@@ -19,8 +19,8 @@ class todo {
 		$action = $_REQUEST['action'] ?? "";
 
 		$person_info     = $this->get_person();
-		$this->person    = $person_info['PersonName'];
-		$this->person_id = $person_info['PersonID'];
+		$this->person    = $person_info['PersonName'] ?? "";
+		$this->person_id = $person_info['PersonID']   ?? 0;
 
 		global $xhtml;
 		$this->xhtml = &$xhtml;
@@ -43,8 +43,8 @@ class todo {
 
 			header("Location: .");
 		} elseif($action == "complete_todo") {
-			$percent = $_GET['percent'];
-			$tid = $_GET['todo_id'];
+			$percent = $_GET['percent'] ?? 0;
+			$tid     = $_GET['todo_id'] ?? 0;
 
 			$ret = $this->update_todo_percent($tid,$percent);
 

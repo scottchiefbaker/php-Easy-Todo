@@ -44,7 +44,9 @@ function handle_cli_commands() {
 		return null;
 	}
 
-	if ($argv[1] === "--to") {
+	$arg = $argv[1] ?? "";
+
+	if ($arg === "--to") {
 		$to = $argv[2];
 	}
 
