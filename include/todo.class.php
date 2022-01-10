@@ -184,16 +184,16 @@ class todo {
 		$todo_desc = "Add a task";
 		$bookmarklet  = $this->get_bookmarklet();
 
-		$ret .= "<div class=\"footer\">\n";
-		$ret .= "\t<div class=\"enter_todo\">\n";
+		$ret .= "<div class=\"row mt-3\">\n";
+		$ret .= "\t<div class=\"col me-5\">\n";
 		//$ret .= "<h5 class=\"small_text bold italic\">Add a TODO item:</h5>\n";
-		$ret .= "\t\t<form action=\".\" method=\"post\">\n";
-		$ret .= "\t\t\t<input type=\"text\" name=\"todo_desc\" placeholder=\"$todo_desc\" value=\"\" size=\"50\" onclick=\"javascript: this.value='';\" maxlength=\"100\" />\n";
+		$ret .= "\t\t<form class=\"input-group\" action=\".\" method=\"post\">\n";
+		$ret .= "\t\t\t<input class=\"form-control\" type=\"text\" name=\"todo_desc\" placeholder=\"$todo_desc\" value=\"\" size=\"50\" onclick=\"javascript: this.value='';\" maxlength=\"100\" />\n";
 		#$ret .= "<input type=\"text\" name=\"todo_due\" value=\"$todo_due\" size=\"10\" />\n";
 		#$ret .= "<input type=\"text\" name=\"todo_priority\" value=\"$todo_prio\" size=\"10\" />\n";
-		$ret .= "\t\t\t<input class=\"button\" type=\"submit\" value=\"Submit\" />\n";
 		$ret .= "\t\t\t<input type=\"hidden\" name=\"todo_id\" value=\"\" size=\"50\" />\n";
 		$ret .= "\t\t\t<input type=\"hidden\" name=\"action\" value=\"add_todo\" />\n";
+		$ret .= "\t\t\t<input class=\"btn btn-primary\" type=\"submit\" value=\"Submit\" />\n";
 		$ret .= "\t\t</form>\n";
 		$ret .= "\t<a href=\"javascript: $bookmarklet\">Bookmarklet</a>\n";
 		$ret .= "\t</div>\n\n";
@@ -203,10 +203,10 @@ class todo {
 
 		$search_text = date("Y-m-d",$start) . " to " . date("Y-m-d",$end);
 
-		$ret .= "\t<div class=\"search_todo\">\n";
-		$ret .= "\t\t<form action=\".\" method=\"get\">\n";
-		$ret .= "\t\t\t<input type=\"text\" name=\"search\" value=\"$search_text\" size=\"50\" maxlength=\"100\" />\n";
-		$ret .= "\t\t\t<input class=\"button\" type=\"submit\" value=\"Search\" />\n";
+		$ret .= "\t<div class=\"col ms-5\">\n";
+		$ret .= "\t\t<form class=\"input-group\" action=\".\" method=\"get\">\n";
+		$ret .= "\t\t\t<input class=\"form-control\" type=\"text\" name=\"search\" value=\"$search_text\" size=\"50\" maxlength=\"100\" />\n";
+		$ret .= "\t\t\t<input class=\"btn btn-secondary\" type=\"submit\" value=\"Search\" />\n";
 		$ret .= "\t\t</form>\n";
 		$ret .= "\t</div>\n";
 		$ret .= "</div>\n";
