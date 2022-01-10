@@ -176,7 +176,7 @@ class todo {
 	function show_todo_list() {
 		$person = $this->person;
 		$person_id = $this->person_id;
-		$ret = "<h2 class=\"large_header\">Logged in as <span Title=\"User #$person_id\">$person</span></h2>\n";
+		$ret = "<h6 class=\"\">Logged in as <span Title=\"User #$person_id\">$person</span></h6>\n";
 		//$ret .= "<h3 class=\"medium_header\">Showing TODO list</h3>\n\n";
 
 		$ret .= $this->todo_html_output();
@@ -185,7 +185,7 @@ class todo {
 		$bookmarklet  = $this->get_bookmarklet();
 
 		$ret .= "<div class=\"row mt-3\">\n";
-		$ret .= "\t<div class=\"col me-5\">\n";
+		$ret .= "\t<div class=\"col ps-0 me-5\">\n";
 		//$ret .= "<h5 class=\"small_text bold italic\">Add a TODO item:</h5>\n";
 		$ret .= "\t\t<form class=\"input-group\" action=\".\" method=\"post\">\n";
 		$ret .= "\t\t\t<input class=\"form-control\" type=\"text\" name=\"todo_desc\" placeholder=\"$todo_desc\" value=\"\" size=\"50\" onclick=\"javascript: this.value='';\" maxlength=\"100\" />\n";
@@ -203,7 +203,7 @@ class todo {
 
 		$search_text = date("Y-m-d",$start) . " to " . date("Y-m-d",$end);
 
-		$ret .= "\t<div class=\"col ms-5\">\n";
+		$ret .= "\t<div class=\"col pe-0 ms-5\">\n";
 		$ret .= "\t\t<form class=\"input-group\" action=\".\" method=\"get\">\n";
 		$ret .= "\t\t\t<input class=\"form-control\" type=\"text\" name=\"search\" value=\"$search_text\" size=\"50\" maxlength=\"100\" />\n";
 		$ret .= "\t\t\t<input class=\"btn btn-secondary\" type=\"submit\" value=\"Search\" />\n";
@@ -245,14 +245,9 @@ class todo {
 		$search    = $_GET['search'] ?? "";
 		$todo_info = $this->get_active_todo($filter);
 
-		$ret  = "<table class=\"todo_list\">\n";
-		$ret .= "<tr>\n";
-		$ret .= "	<th width=\"23%\">Creation</th>\n";
-		$ret .= "	<th width=\"52%\">Description of task</th>\n";
-		$ret .= "	<th width=\"10%\">Complete</th>\n";
-		$ret .= "</tr>\n";
-
 		$completed_tasks = "";
+
+		$ret = '';
 
 		if ($todo_info) {
 			foreach ($todo_info as $info) {
@@ -297,12 +292,12 @@ class todo {
 </svg>
 					</span></a>";
 
-				$row = "<tr>\n";
-				$row .= "\t<td class=\"$html_class\"><b title=\"$addedt\">$added</b> by $created_by</td>\n";
+				$row = "<div class=\"row mb-3\">\n";
+				$row .= "\t<div class=\"col-lg-2 $html_class\"><span class=\"\"><b title=\"$addedt\">$added</b></span><span class=\"d-inline d-lg-none\"> - </span><span class=\"d-lg-block\">$created_by</span></div>\n";
 				#$ret .= "\t<td><a href=\"index.php?action=detail_view&todo_id=$id\">$id</a> $desc $notes_html $note_toggle</td>\n";
-				$row .= "\t<td data-todo_id=\"$id\" class=\"$html_class\"><div>$show_icon<span class=\"todo_desc\">$desc</span></div><div class=\"todo_notes\">$notes_html</div></td>\n";
-				$row .= "\t<td class=\"$html_class edit_percent\"><div class=\"center hide_percent\">$comp_percent</div><div class=\"center\">$comp_admin</div></td>\n";
-				$row .= "</tr>\n";
+				$row .= "\t<div class=\"col-lg-8 border-start border-end todo-desc-box $html_class\" data-todo_id=\"$id\"><div>$show_icon<span class=\"todo_desc\">$desc</span></div><div class=\"todo_notes\">$notes_html</div></div>\n";
+				$row .= "\t<div class=\"col-lg-2 $html_class edit_percent\"><div class=\"center hide_percent\">$comp_percent</div><div class=\"center\">$comp_admin</div></div>\n";
+				$row .= "</div>\n";
 
 				if ($comp_percent_raw == 100) {
 					$completed_tasks .= $row;
@@ -313,7 +308,7 @@ class todo {
 		}
 
 		$ret .= $completed_tasks;
-		$ret .= "</table>\n\n";
+		$ret .= "</div>\n\n";
 
 		return $ret;
 	}

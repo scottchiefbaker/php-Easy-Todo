@@ -123,3 +123,7 @@ ul { border: 0px solid; margin: 0px; }
 	font-size: 70%;
 	margin-top: 1em;
 }
+
+.todo-desc-box {
+	cursor: pointer;
+}

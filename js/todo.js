@@ -97,12 +97,9 @@ function get_eid(name) {
 }
 
 function init_add_note() {
-	var selector = ".todo_desc, .todo_notes";
-	var target   = $(selector);
-	target.css("cursor","pointer").attr("title","Click to add notes to this item");
-
-	$(".todo_normal, .todo_complete, .back_burner").on("click", selector, function() {
-		var box = $(this).closest("td");
+	$(".todo-desc-box").on("click", function() {
+		var box = $(this);
+		console.log(box);
 		add_note(box);
 	});
 }
