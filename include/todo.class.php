@@ -269,7 +269,7 @@ class todo {
 				$comp_percent     = $comp_percent_raw . "%";
 
 				$comp_admin = "<form style=\"display: inline;\" method=\"get\" action=\".\">";
-				$comp_admin .= "	<input class=\"hidden percent\" type=\"text\" maxlength=\"3\" value=\"$comp_percent_raw\" name=\"percent\" size=\"2\" />";
+				$comp_admin .= "	<input class=\"hidden percent form-control\" style=\"width: 4em;\" type=\"text\" maxlength=\"3\" value=\"$comp_percent_raw\" name=\"percent\" size=\"2\" />";
 				$comp_admin .= "	<input type=\"hidden\" name=\"todo_id\" value=\"$id\" />";
 				$comp_admin .= "	<input type=\"hidden\" name=\"action\" value=\"complete_todo\" />";
 				$comp_admin .= "</form>";
@@ -290,7 +290,12 @@ class todo {
 					$html_class = "todo_normal";
 				}
 
-				$show_icon = "<a href=\"?details=$id\"><span class=\"show_detail\">&#x1F4CB;</span></a>";
+				$show_icon = "<a href=\"?details=$id\"><span class=\"show_detail\" title=\"Show detailed summary of this item\">
+					<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" fill=\"currentColor\" class=\"bi bi-card-list\" viewBox=\"0 0 16 16\">
+  <path d=\"M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z\"/>
+  <path d=\"M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zM4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z\"/>
+</svg>
+					</span></a>";
 
 				$row = "<tr>\n";
 				$row .= "\t<td class=\"$html_class\"><b title=\"$addedt\">$added</b> by $created_by</td>\n";

@@ -19,7 +19,7 @@ function add_note(selector) {
 
 	if (has_note || !id) { return false; }
 
-	var note = $("<div class=\"add_note_wrapper\"><form class=\"adding_note\" method=\"get\" action=\"index.php\"> <input class=\"add_note\" placeholder=\"Add notes...\" type=\"text\" id=\"ta_" + id + "\" name=\"note\" /> <input type=\"hidden\" name=\"note_id\" value=\"" + id + "\"> <input type=\"hidden\" name=\"action\" value=\"add_note\"></form></div>");
+	var note = $("<div class=\"add_note_wrapper\"><form class=\"\" method=\"get\" action=\"index.php\"> <input class=\"form-control add_note\" placeholder=\"Add notes...\" type=\"text\" id=\"ta_" + id + "\" name=\"note\" /> <input type=\"hidden\" name=\"note_id\" value=\"" + id + "\"> <input type=\"hidden\" name=\"action\" value=\"add_note\"></form></div>");
 
 	note.appendTo(elem);
 	$(".add_note",elem).focus();
