@@ -12,12 +12,12 @@ function add_note(selector) {
 	var id   = elem.data("todo_id");
 
 	// If this item already has a note box open don't add a second
-	var has_note = $(".adding_note", elem).length > 0;
+	var has_note = $(".add_note_wrapper", elem).length > 0;
+
+	if (has_note || !id) { return false; }
 
 	// Only one note box open at at time, remove all the other ones
 	$(".add_note_wrapper").remove();
-
-	if (has_note || !id) { return false; }
 
 	var note = $("<div class=\"add_note_wrapper\"><form class=\"\" method=\"get\" action=\"index.php\"> <input class=\"form-control add_note\" placeholder=\"Add notes...\" type=\"text\" id=\"ta_" + id + "\" name=\"note\" /> <input type=\"hidden\" name=\"note_id\" value=\"" + id + "\"> <input type=\"hidden\" name=\"action\" value=\"add_note\"></form></div>");
 
