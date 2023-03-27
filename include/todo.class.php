@@ -481,7 +481,9 @@ class todo {
 		$this->dbq->query($sql);
 
 		if ($percent == $this->back_burner_id) {
-			$note = "Project was put on the back burner";
+			$note = "Task was put on hold";
+		} elseif ($percent >= 100) {
+			$note = "Task was marked completed";
 		} else {
 			$note = "Percentage was changed to $percent%";
 		}
