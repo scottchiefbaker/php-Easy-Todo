@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Todo list</title>
+	<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="css/todo.css" />
+
+
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/todo.js"></script>
+
+	<script>
+		$(document).ready(function () {
+			$(".complete_percent").css('cursor', 'pointer').click(function(event) {
+				event.stopPropagation();
+				console.log($(this));
+				var per     = $(this).data('complete_percent');
+				var todo_id = $(this).data('todo_id');
+				var elem    = $("<form><input type=\"hidden\" name=\"todo_id\" value=\"" + todo_id + "\" /><input type=\"hidden\" name=\"action\" value=\"complete_todo\" /><input class=\"form-control focus\" type=\"text\" name=\"percent\" value=\"" + per + "\" /></form>");
+				$(this).html(elem);
+				$("input.focus").focus().select();
+			});
+		});
+	</script>
+
+  </head>
+  <body class="container-lg">
+	{foreach $todo_item as $x}
+	<div class="w-100 mb-2">
+		<div class="border rounded p-2 todo-desc-box{if $x.TodoCompletePercent == 100} todo_complete{/if}{if $x.TodoCompletePercent == -1} back_burner{/if}" data-todo_id={$x.TodoID}>
+			<div class="d-flex">
+				<div class="flex-grow-1">
+					<div class="fw-bold">
+						<a href="?details={$x.TodoID}" class="ms-2 me-2" title="Show details">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-checklist" viewBox="0 0 16 16">
+								<path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+								<path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+							</svg></a>
+							{$x.TodoDateTimeAdded|dformat} - {$x.TodoDesc}
+					</div>
+				</div>
+				<div class="text-end me-2 complete_percent" data-todo_id="{$x.TodoID}" data-complete_percent="{$x.TodoCompletePercent}%" style="width: 6em;">
+					{if $x.TodoCompletePercent == -1}
+					<div class="badge text-bg-warning">On hold</div>
+					{elseif $x.TodoCompletePercent >= 100}
+					<div class="badge text-bg-success">Complete</div>
+					{else}
+					<div class="badge text-bg-secondary">{$x.TodoCompletePercent}%</div>
+					{/if}
+				</div>
+			</div>
+
+			{if $x.notes}
+			<ul class="notes">
+			{foreach $x.notes as $y}
+				<li><span class="" style="font-size: 85%;">{$y.NoteDateTime|dformat}: {$y.NoteText}</span></li>
+			{/foreach}
+			</ul>
+			{/if}
+		</div>
+	</div>
+	{/foreach}
+
+	<div class="d-flex mt-3 mb-3">
+		<div class="col ps-0 me-5">
+			<form class="input-group" action="." method="post">
+				<input class="form-control" type="text" name="todo_desc" placeholder="Add a task" value="" size="50" onclick="javascript: this.value='';" maxlength="100" />
+				<input type="hidden" name="todo_id" value="" size="50" />
+				<input type="hidden" name="action" value="add_todo" />
+				<input class="btn btn-primary" type="submit" value="Submit" />
+			</form>
+			<a href="javascript: void(z=document.body.appendChild(document.createElement('script'))); void(z.language='javascript');void(z.type='text/javascript');void(z.src='https://www.perturb.org/todo/js/bookmarklet.js.php');void(z.id='todo_bmlet');">Bookmarklet</a>
+		</div>
+
+		<div class="col pe-0 ms-5">
+			<form class="input-group" action="." method="get">
+				<input class="form-control" type="text" name="search" value="2023-02-25 to 2023-03-27" size="50" maxlength="100" />
+				<input class="btn btn-secondary" type="submit" value="Search" />
+			</form>
+		</div>
+	</div>
+
+	{if $debug}
+	{$dbq_summary}
+	{$sluz_var_html}
+	{/if}
+  </body>
+</html>
+

@@ -6,33 +6,33 @@ $start = microtime(1);
 $base_dir = dirname(__FILE__);
 
 require("$base_dir/include/todo.class.php");
-require("$base_dir/include/sluz/sluz.class.php");
+require("$base_dir/include/xhtml.class.php");
 
-$sluz = new sluz;
-$todo = new todo;
+$xhtml = new html;
+$xhtml->css[] = "css/todo.css";
+$xhtml->js[]  = "js/jquery.js";
+$xhtml->js[]  = "js/todo.js";
+$xhtml->title = "TODO List";
+
+$todo  = new todo;
 
 handle_cli_commands();
 
-$detail_id  = $_GET['details'] ?? null;
-$todo_items = [];
+$detail_id = $_GET['details'] ?? null;
 if ($detail_id) {
 	$out = $todo->show_detail($detail_id);
 } else {
-	$todo_items = $todo->get_todo_list();
+	$out = $todo->show_todo_list();
 }
 
-$total = sprintf("%0.3f", microtime(1) - $start);
+// Output some debug info if requested
+if ($debug) {
+	$total = sprintf("%0.3f", microtime(1) - $start);
+	$out .= "<p>Rendered in $total seconds</p>";
+	$out .= $todo->dbq->query_summary();
+}
 
-$sluz->assign('render_time', $total);
-$sluz->assign('dbq_summary', $todo->dbq->query_summary());
-$sluz->assign('todo_item', $todo_items);
-$sluz->assign('debug', $debug);
-
-$sluz_vars     = $sluz->tpl_vars;
-$sluz_var_html = k($sluz_vars, KRUMO_RETURN);
-$sluz->assign('sluz_var_html', $sluz_var_html);
-
-print $sluz->fetch("tpls/index.stpl");
+print $xhtml->output($out);
 
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -76,10 +76,4 @@ function send_reminder_email($to) {
 	$ok = mail($to, $subj, $body, $headers);
 
 	return $ok;
-}
-
-function dformat($ut) {
-	$ret = date("Y-m-d", $ut);
-
-	return $ret;
 }
