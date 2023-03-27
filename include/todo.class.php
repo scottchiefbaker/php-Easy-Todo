@@ -25,6 +25,8 @@ class todo {
 		global $xhtml;
 		$this->xhtml = &$xhtml;
 
+		//if ($_REQUEST) { kd($_REQUEST); }
+
 		if ($action == "add_person") {
 			$person = $_POST['person_name'];
 			$email  = $_POST['person_email'];
@@ -45,6 +47,13 @@ class todo {
 		} elseif($action == "complete_todo") {
 			$percent = $_GET['percent'] ?? 0;
 			$tid     = $_GET['todo_id'] ?? 0;
+
+			$percent = preg_replace("/%/", '', $percent);
+			$percent = trim($percent);
+
+			if (!is_numeric($percent)) {
+				$this->error_out("'$percent' is not a number...");
+			}
 
 			$ret = $this->update_todo_percent($tid,$percent);
 
