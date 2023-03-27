@@ -240,6 +240,13 @@ class todo {
 		return $ret;
 	}
 
+	function get_todo_list() {
+		$filter = $this->parse_search();
+		$ret    = $this->get_active_todo($filter);
+
+		return $ret;
+	}
+
 	function todo_html_output() {
 		$filter    = $this->parse_search();
 		$search    = $_GET['search'] ?? "";
