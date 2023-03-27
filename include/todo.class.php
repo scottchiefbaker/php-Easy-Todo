@@ -389,7 +389,7 @@ class todo {
 				FROM Todo t
 				INNER JOIN Person p USING (PersonID)
 				LEFT  JOIN Notes n USING (TodoID)
-				WHERE (TodoDesc LIKE '%$search_term%' OR PersonName LIKE '%$search_term%' OR NoteText LIKE '%$search_term%')
+				WHERE (TodoDesc LIKE '%$search%' OR PersonName LIKE '%$search%' OR NoteText LIKE '%$search%')
 				GROUP BY t.TodoID
 				ORDER BY $order_field DESC
 				LIMIT 20";
