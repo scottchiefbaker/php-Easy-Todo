@@ -11,6 +11,11 @@ require("$base_dir/include/sluz/sluz.class.php");
 $sluz = new sluz;
 $todo = new todo;
 
+if (!empty($_GET['logout'])) {
+	$todo->logout();
+	header('Location: .');
+}
+
 handle_cli_commands();
 
 $detail_id  = $_GET['details'] ?? null;
