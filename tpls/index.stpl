@@ -59,7 +59,7 @@
 			{if $x.notes}
 			<ul class="notes">
 			{foreach $x.notes as $y}
-				<li><span class="" style="font-size: 85%;">{$y.NoteDateTime|dformat}: {$y.NoteText}</span></li>
+				<li><span class="" style="font-size: 85%;">{$y.NoteDateTime|dformat}: {$y.NoteText|markdown}</span></li>
 			{/foreach}
 			</ul>
 			{/if}

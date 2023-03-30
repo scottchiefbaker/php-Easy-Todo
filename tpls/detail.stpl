@@ -17,7 +17,7 @@
 		{if $notes}
 		<ul class="mb-3">
 		{foreach $notes as $x}
-		<li>{$x.NoteDateTime|dformat_time}: {$x.NoteText}</li>
+		<li>{$x.NoteDateTime|dformat_time}: {$x.NoteText|markdown}</li>
 		{/foreach}
 		</ul>
 		{else}
