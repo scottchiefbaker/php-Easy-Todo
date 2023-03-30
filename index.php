@@ -98,3 +98,9 @@ function dformat_time($ut) {
 
 	return $ret;
 }
+
+function markdown($str) {
+	$str = Parsedown::instance()->line($str);
+
+	return $str;
+}
