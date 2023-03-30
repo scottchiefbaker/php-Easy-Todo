@@ -3,13 +3,13 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Todo list</title>
+		<title>Details for task</title>
 		<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" />
 		<link rel="stylesheet" type="text/css" media="screen" href="css/todo.css" />
 	</head>
 
 	<body class="container-lg">
-		<h1 class="">Details for {$TodoDesc}</h1>
+		<h1 class="">{$TodoDesc}</h1>
 
 		<div class=""><b>Created on:</b> {$TodoDateTimeAdded|dformat_time}</div>
 		<div class="mb-3"><b>Percent complete:</b> {$TodoCompletePercent}%</div>
