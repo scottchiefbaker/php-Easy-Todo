@@ -13,6 +13,10 @@
 
 	<script>
 		$(document).ready(function () {
+			$(".todo-desc-box a").click(function(event) {
+				event.stopPropagation();
+			});
+
 			$(".complete_percent").css('cursor', 'pointer').click(function(event) {
 				event.stopPropagation();
 				console.log($(this));
