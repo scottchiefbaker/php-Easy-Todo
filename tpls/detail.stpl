@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Todo list</title>
+		<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="css/todo.css" />
+	</head>
+
+	<body class="container-lg">
+		<h1 class="">Details for {$TodoDesc}</h1>
+
+		<div class=""><b>Created on:</b> {$TodoDateTimeAdded|dformat_time}</div>
+		<div class="mb-3"><b>Percent complete:</b> {$TodoCompletePercent}%</div>
+
+		{if $notes}
+		<ul class="mb-3">
+		{foreach $notes as $x}
+		<li>{$x.NoteDateTime|dformat_time}: {$x.NoteText}</li>
+		{/foreach}
+		</ul>
+		{else}
+		<div class="mb-3 text-danger">No notes yet...</div>
+		{/if}
+
+		<a href=".">Home</a>
+
+		{if $debug}
+		{$dbq_summary}
+		{$sluz_var_html}
+		{/if}
+	</body>
+</html>

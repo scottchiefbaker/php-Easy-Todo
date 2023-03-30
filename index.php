@@ -20,8 +20,12 @@ handle_cli_commands();
 
 $detail_id  = $_GET['details'] ?? null;
 $todo_items = [];
+$tpl        = "tpls/index.stpl";
 if ($detail_id) {
-	$out = $todo->show_detail($detail_id);
+	$x = $todo->show_detail($detail_id);
+
+	$sluz->assign($x);
+	$tpl = "tpls/detail.stpl";
 } else {
 	$todo_items = $todo->get_todo_list();
 }
@@ -37,7 +41,7 @@ $sluz_vars     = $sluz->tpl_vars;
 $sluz_var_html = k($sluz_vars, KRUMO_RETURN);
 $sluz->assign('sluz_var_html', $sluz_var_html);
 
-print $sluz->fetch("tpls/index.stpl");
+print $sluz->fetch($tpl);
 
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
@@ -84,7 +88,13 @@ function send_reminder_email($to) {
 }
 
 function dformat($ut) {
-	$ret = date("Y-m-d", $ut);
+	$ret = date("F jS Y", $ut);
+
+	return $ret;
+}
+
+function dformat_time($ut) {
+	$ret = date("F jS Y @ g:ia", $ut);
 
 	return $ret;
 }

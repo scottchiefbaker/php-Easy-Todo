@@ -743,32 +743,7 @@ class todo {
 		$x = $this->get_active_todo(['id' => $id]);
 		$x = array_shift($x);
 
-		$desc     = $x['TodoDesc'];
-		$date_str = date($this->date_format,$x['TodoDateTimeAdded']);
-		$notes    = $x['notes'] ?? [];
-		$per      = intval($x['TodoCompletePercent']);
-
-		//k($x);
-
-		$ret = "<div><b>Date Added:</b> $date_str</div>\n";
-		$ret .= "<div><b>Description:</b> $desc</div>\n";
-		$ret .= "<div><b>Complete:</b> $per%</div>\n";
-		if ($notes) {
-			$ret .= "<div class=\"detail_notes\"><b>Notes:</b></div>\n";
-		}
-
-		$ret .= "<ul>\n";
-		foreach ($notes as $n) {
-			$date_str = date($this->date_format,$n['NoteDateTime']);
-			$note_txt = $n['NoteText'];
-
-			$ret .= "<li>$date_str - $note_txt</li>";
-		}
-		$ret .= "</ul>\n";
-
-		$ret .= "<div class=\"detail_menu\"><a href=\".\">Menu</a></div>";
-
-		return $ret;
+		return $x;
 	}
 
 	function is_cli() {
