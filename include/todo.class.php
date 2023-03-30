@@ -34,8 +34,8 @@ class todo {
 
 			// Otherwise it's not set because it didn't exist above
 			$person_info     = $this->get_person();
-			$this->person    = $person_info['PersonName'];
-			$this->person_id = $person_info['PersonID'];
+			$this->person    = $person_info['PersonName'] ?? "";
+			$this->person_id = $person_info['PersonID']   ?? "";
 
 			header("Location: .");
 		} elseif($action == "add_todo") {
@@ -75,9 +75,9 @@ class todo {
 		$is_cli = $this->is_cli();
 
 		if (!$this->person && empty($_GET['user_search']) && !$is_cli) {
-			$ret = $this->show_set_person();
-			$this->xhtml->body_props = ("onload='set_person_focus();'");
-			print $this->xhtml->output($ret);
+			global $sluz;
+
+			print $sluz->fetch("tpls/login.stpl");
 			exit;
 		}
 	}
@@ -139,6 +139,10 @@ class todo {
 		$ret = $this->dbq->query($sql);
 
 		return $ret;
+	}
+
+	function logout() {
+		setcookie("todo_unique_id","",0);
 	}
 
 	function get_person_info($person_id) {
@@ -662,20 +666,21 @@ class todo {
 
 		// print $sql;
 
-		$rs = $this->dbq->query($sql);
+		$rs   = $this->dbq->query($sql);
 		$rows = sizeof($rs);
+
+		header('Content-Type: application/json; charset=utf-8');
 
 		if ($rows == 1) {
 			$data = $rs[0];
-			$id = $data['PersonUniqID'];
-			$name = $data['PersonName'];
-			$email = $data['PersonEmailAddress'];
+			print json_encode($data);
 
-			print "$id:$name:$email";
-		} elseif ($rows > 1) {
-			print "-1:More than 1 result:foo@foo.com";
+			//$id    = $data['PersonUniqID'];
+			//$name  = $data['PersonName'];
+			//$email = $data['PersonEmailAddress'];
+			//print "$id:$name:$email";
 		} else {
-			print "";
+			print json_encode([]);
 		}
 
 		return 1;

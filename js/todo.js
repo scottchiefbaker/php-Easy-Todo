@@ -41,53 +41,30 @@ function check_login_form() {
 	return 1;
 }
 
-function search_name(name) {
-	var xmlhttp;
-
-	if (get_eid('existing').checked != true) {
-		// alert('not existing');
-		return 0;
+function search_name(str) {
+	if (str.length <= 3) {
+		return;
 	}
 
-	if (window.XMLHttpRequest) {
-		xmlhttp = new XMLHttpRequest();
-		xmlhttp.overrideMimeType("text/xml");
-	} else if (window.ActiveXObject) {
-		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-
-	var search_term = name;
-	var params = "user_search=" + search_term;
-
-	xmlhttp.open("GET", "search.php?" + params, true);
-	xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-	xmlhttp.onreadystatechange = function() {
-		if (xmlhttp.readyState == 4) {
-			var results = xmlhttp.responseText;
-
-			data = results.split(":");
-			var id = parseInt(data[0]);
-			var name = data[1];
-			var email = data[2];
-
-			// alert(id + " " + name + " " + email);
+	$.ajax({
+		url: "search.php?user_search=" + str,
+		success: function(result) {
+			var id = result.PersonUniqID ?? 0;
 
 			if (id > 0) {
+				var name  = result.PersonName;
+				var email = result.PersonEmailAddress;
+
 				var conf = confirm("Are you: \nName: " + name + "\nEmail: " + email);
 
 				if (conf) {
-					get_eid('person_name').value = name;
-					get_eid('person_email').value = email;
-					get_eid('person_id').value = id;
+					$('#person_name').val(name);
+					$('#person_email').val(email);
+					$('#person_id').val(id);
 				}
-				// alert(name + " " + email);
 			}
-
 		}
-	}
-
-	xmlhttp.send(params);
+	});
 }
 
 function get_eid(name) {

@@ -71,7 +71,6 @@
 				<input type="hidden" name="action" value="add_todo" />
 				<input class="btn btn-primary" type="submit" value="Submit" />
 			</form>
-			<a href="javascript: void(z=document.body.appendChild(document.createElement('script'))); void(z.language='javascript');void(z.type='text/javascript');void(z.src='https://www.perturb.org/todo/js/bookmarklet.js.php');void(z.id='todo_bmlet');">Bookmarklet</a>
 		</div>
 
 		<div class="col pe-0 ms-5">
@@ -82,10 +81,27 @@
 		</div>
 	</div>
 
+	<div class="d-flex">
+		<div class="w-100 text-end">
+			<a class="me-1" title="Bookmarklet" href="javascript: void(z=document.body.appendChild(document.createElement('script'))); void(z.language='javascript');void(z.type='text/javascript');void(z.src='https://www.perturb.org/todo/js/bookmarklet.js.php');void(z.id='todo_bmlet');">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bookmark-star" viewBox="0 0 16 16">
+					<path d="M7.84 4.1a.178.178 0 0 1 .32 0l.634 1.285a.178.178 0 0 0 .134.098l1.42.206c.145.021.204.2.098.303L9.42 6.993a.178.178 0 0 0-.051.158l.242 1.414a.178.178 0 0 1-.258.187l-1.27-.668a.178.178 0 0 0-.165 0l-1.27.668a.178.178 0 0 1-.257-.187l.242-1.414a.178.178 0 0 0-.05-.158l-1.03-1.001a.178.178 0 0 1 .098-.303l1.42-.206a.178.178 0 0 0 .134-.098L7.84 4.1z"/>
+					<path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
+				</svg>
+			</a>
+
+			<a class="" title="Log out" href="?logout=true">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-door-closed" viewBox="0 0 16 16">
+					<path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V2zm1 13h8V2H4v13z"/>
+					<path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0z"/>
+				</svg>
+			</a>
+		</div>
+	</div>
+
 	{if $debug}
 	{$dbq_summary}
 	{$sluz_var_html}
 	{/if}
   </body>
 </html>
-
