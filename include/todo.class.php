@@ -9,6 +9,12 @@ class todo {
 	public $date_format = "F jS Y";
 	public $time_format = "F jS Y @ g:iA";
 
+	public $dbq;
+
+	public $person;
+	public $person_id;
+	public $xhtml;
+
 	function __construct() {
 		$dsn = "sqlite:/home/bakers/database/todo.sqlite";
 
@@ -40,10 +46,9 @@ class todo {
 			header("Location: .");
 		} elseif($action == "add_todo") {
 			$desc = $_REQUEST['todo_desc'];
+			$id   = $this->add_todo_item($desc);
 
-			$this->add_todo_item($desc);
-
-			header("Location: .");
+			header("Location: .#tid_$id");
 		} elseif($action == "complete_todo") {
 			$percent = $_GET['percent'] ?? 0;
 			$tid     = $_GET['todo_id'] ?? 0;
@@ -59,15 +64,16 @@ class todo {
 
 			if (!$ret) { $this->error_out("Couldn't update the percentage!?!"); }
 
-			header("Location: .");
+			header("Location: .#tid_$tid");
 		} elseif($action == "add_note") {
-			$id = $_GET['note_id'];
+			$id   = $_GET['note_id'];
 			$note = $_GET['note'];
+
 			if (!$this->add_todo_note($id,$note,1)) {
 				$this->error_out("Error adding note");
 			}
 
-			header("Location: .");
+			header("Location: .#tid_$id");
 		}
 
 		///////////////////////////////////////////////////

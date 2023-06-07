@@ -32,7 +32,7 @@
   </head>
   <body class="container-lg">
 	{foreach $todo_item as $x}
-	<div class="w-100 mb-2">
+	<div id="tid_{$x.TodoID}" class="w-100 mb-2">
 		<div class="border rounded p-2 todo-desc-box{if $x.TodoCompletePercent == 100} todo_complete{/if}{if $x.TodoCompletePercent == -1} back_burner{/if}" data-todo_id={$x.TodoID}>
 			<div class="d-flex">
 				<div class="flex-grow-1">
