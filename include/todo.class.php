@@ -1,6 +1,6 @@
 <?php
 
-require_once("$base_dir/include/Parsedown.php");
+require_once("$base_dir/include/parsedown/Parsedown.php");
 require_once("$base_dir/include/krumo/class.krumo.php");
 
 class todo {
