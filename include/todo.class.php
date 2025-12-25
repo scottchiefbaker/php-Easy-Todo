@@ -15,6 +15,8 @@ class todo {
 	public $person_id;
 	public $xhtml;
 
+	public $VERSION = 0.8;
+
 	function __construct() {
 		$dsn = "sqlite:/home/bakers/database/todo.sqlite";
 
