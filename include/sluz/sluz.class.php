@@ -5,7 +5,7 @@
 define('SLUZ_INLINE', 'INLINE_TEMPLATE'); // Just a specific string
 
 class sluz {
-	public $version       = '0.8.7';
+	public $version       = '0.9.1';
 	public $tpl_file      = null;       // The path to the TPL file
 	public $inc_tpl_file  = null;       // The path to the {include} file
 
@@ -45,16 +45,8 @@ class sluz {
 
 		$this->char_pos = $char_pos;
 
-		// Micro-optimization for "" input!
-		if (strlen($str) === 0) {
-			return '';
-		}
-
-		// If it doesn't start with a '{' it's plain text so we just return it
-		if ($str[0] !== '{') {
-			$ret = $str;
 		// Simple variable replacement {$foo} or {$foo|default:"123"}
-		} elseif (str_starts_with($str, '{$') && preg_match('/^\{\$(\w[\w\|\.\'":,]*)\s*\}$/', $str, $m)) {
+		if (str_starts_with($str, '{$') && preg_match('/^\{\$(\w[\w\|\.\'";\t :,!@#%^&*?_-]*)\}$/', $str, $m)) {
 			$ret = $this->variable_block($m[1]);
 		// If statement {if $foo}{/if}
 		} elseif (str_starts_with($str, '{if ') && str_ends_with($str, '{/if}')) {
@@ -68,9 +60,6 @@ class sluz {
 		// Liternal {literal}Stuff here{/literal}
 		} elseif (str_starts_with($str, '{literal}') && preg_match('/^\{literal\}(.+)\{\/literal\}$/s', $str, $m)) {
 			$ret = $m[1];
-		// This is for complicated variables with default values that don't match the above rule
-		} elseif (str_contains($str, "|") && preg_match('/^\{\$(\w.+)\}/', $str, $m)) {
-			$ret = $this->variable_block($m[1]);
 		// Catch all for other { $num + 3 } type of blocks
 		} elseif (preg_match('/^\{(.+)}$/s', $str, $m)) {
 			$ret = $this->expression_block($str, $m);
@@ -213,6 +202,27 @@ class sluz {
 			}
 		}
 
+		// If the *previous* block was an {if} or {foreach} we remove one leading \n
+		// to maintain parity between input and output whitespace. ^ is the whitespace
+		// we're removing.
+		//
+		// This allows templates like:
+		//
+		// {foreach $name as $x}
+		// {$x}
+		// {/foreach}^
+		$prev_is_if = false;
+		for ($i = 0; $i < count($blocks); $i++) {
+			$str       = $blocks[$i][0] ?? "";
+			$cur_is_if = str_starts_with($str, '{if') || str_starts_with($str, '{for');
+
+			if ($prev_is_if) {
+				$blocks[$i][0] = $this->ltrim_one($str, "\n");
+			}
+
+			$prev_is_if = $cur_is_if;
+		}
+
 		return $blocks;
 	}
 
@@ -238,7 +248,7 @@ class sluz {
 
 		// We use ABSOLUTE paths here because this may be called in the destructor which has a cwd() of '/'
 		if (!$tpl_file) {
-			$tpl_file = $this->php_file_dir . '/' . $this->guess_tpl_file($this->php_file);
+			$tpl_file = $this->guess_tpl_file($this->php_file);
 		}
 
 		$parent_tpl = $parent ?? $this->parent_tpl;
@@ -265,7 +275,9 @@ class sluz {
 
 	// Guess the TPL filename based on the PHP file
 	public function guess_tpl_file($php_file) {
-		$ret = "tpls/" . preg_replace('/\.php$/', '.stpl', basename($php_file));
+		$base     = basename($php_file);
+		$tpl_name = preg_replace('/\.php$/', '.stpl', $base);
+		$ret      = "tpls/$tpl_name";
 
 		return $ret;
 	}
@@ -285,15 +297,15 @@ class sluz {
 		$html       = '';
 
 		foreach ($blocks as $x) {
-			$block     = $x[0];
-			$has_delim = $block[0] === '{';
+			$block      = $x[0];
+			$first_char = ($block[0] ?? "") === '{';
 
 			// If the first char is a { it's something we need to process
-			if ($has_delim) {
+			if ($first_char) {
 				$char_pos  = $x[1];
 				$html     .= $this->process_block($block, $char_pos);
 			// It's a static text block so we just append it
-			} else {
+			} elseif ($block) {
 				$html .= $block;
 			}
 		}
@@ -595,8 +607,9 @@ class sluz {
 
 	// Turn on simple mode
 	public function enable_simple_mode($php_file) {
-		$this->php_file    = $php_file;
-		$this->simple_mode = true;
+		$this->php_file     = $php_file;
+		$this->php_file_dir = dirname($php_file);
+		$this->simple_mode  = true;
 	}
 
 	///////////////////////////////////////////////////////////////////////////////
@@ -725,13 +738,12 @@ class sluz {
 		$is_simple = (strpos($str, "{else", 7) === false);
 
 		if ($is_simple) {
-			//k($str);
 			preg_match("/{if (.+?)}(.+){\/if}/s", $str, $m);
 			$cond     = $m[1] ?? "";
 			$payload  = $m[2] ?? "";
 
 			// This makes input -> output whitespace more correct
-			$payload  = ltrim($payload, "\n");
+			$payload  = $this->ltrim_one($payload, "\n");
 
 			$rules[0] = [$cond, $payload];
 		} else {
@@ -803,19 +815,23 @@ class sluz {
 		return $ret;
 	}
 
+	// Remove ONE \n from the beginning of a string
+	function ltrim_one(string $str, $char) {
+		if (isset($str[0]) && $str[0] === $char) {
+			return substr($str, 1);
+		}
+
+		return $str;
+	}
+
 	// Parse a foreach block
 	private function foreach_block($m) {
 		$src     = $this->convert_variables_in_string($m[1]); // src array
 		$okey    = $m[2]; // orig key
 		$oval    = $m[4]; // orig val
 		$payload = $m[5]; // code block to parse on iteration
+		$payload = $this->ltrim_one($payload, "\n"); // Input -> Output \n parity
 		$blocks  = $this->get_blocks($payload);
-
-		// This makes input -> output whitespace more correct
-		$first = $blocks[0][0] ?? "";
-		if ($first === "\n") {
-			array_shift($blocks);
-		}
 
 		$src = $this->peval($src);
 
